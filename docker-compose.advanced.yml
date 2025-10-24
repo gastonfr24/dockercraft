@@ -1,0 +1,278 @@
+# ============================================
+# DockerCraft - Advanced Configuration Examples
+# ============================================
+# Examples demonstrating advanced environment variables
+# Usage: docker-compose -f docker-compose.advanced.yml up <service-name>
+
+version: '3.8'
+
+services:
+  # ============================================
+  # Auto-Plugin Installation Example
+  # ============================================
+  server-with-plugins:
+    build: .
+    container_name: mc-plugins
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Server with Auto Plugins"
+      
+      # Auto-download plugins from Spiget
+      SPIGET_RESOURCES: "28140,1997,19254"  # EssentialsX, Vault, LuckPerms
+      
+      # Or from direct URLs
+      # PLUGINS: |
+      #   https://example.com/plugin1.jar
+      #   https://example.com/plugin2.jar
+      
+      # RCON for administration
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - plugins-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Whitelist & OPS Configuration
+  # ============================================
+  server-whitelist:
+    build: .
+    container_name: mc-whitelist
+    ports:
+      - "25566:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "3G"
+      SERVER_NAME: "Whitelist Server"
+      
+      # Enable whitelist
+      ENABLE_WHITELIST: "TRUE"
+      
+      # Whitelist players (comma-separated)
+      WHITELIST: "player1,player2,player3"
+      
+      # Server operators (comma-separated)
+      OPS: "admin1,admin2"
+      
+      # Enforce whitelist
+      ENFORCE_WHITELIST: "TRUE"
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - whitelist-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Performance Mods (Fabric)
+  # ============================================
+  server-performance-mods:
+    build: .
+    container_name: mc-performance
+    ports:
+      - "25567:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
+      VERSION: "1.20.1"
+      MEMORY: "4G"
+      SERVER_NAME: "Performance Optimized"
+      
+      # Auto-download performance mods from Modrinth
+      MODRINTH_PROJECTS: |
+        sodium
+        lithium
+        starlight
+        ferritecore
+        lazydfu
+        memoryleakfix
+        krypton
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - performance-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Custom World with Seed
+  # ============================================
+  server-custom-world:
+    build: .
+    container_name: mc-custom-world
+    ports:
+      - "25568:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Custom World"
+      
+      # World configuration
+      LEVEL: "CustomWorld"
+      SEED: "-1234567890"
+      LEVEL_TYPE: "default"
+      GENERATE_STRUCTURES: "true"
+      
+      # Spawn settings
+      SPAWN_ANIMALS: "true"
+      SPAWN_MONSTERS: "true"
+      SPAWN_NPCS: "true"
+      
+      # Initial spawn position
+      # SPAWN_PROTECTION: "16"
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - custom-world-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # PvP Arena Server
+  # ============================================
+  server-pvp-arena:
+    build: .
+    container_name: mc-pvp-arena
+    ports:
+      - "25569:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "3G"
+      SERVER_NAME: "PvP Arena"
+      
+      # PvP configuration
+      MODE: "adventure"
+      PVP: "true"
+      DIFFICULTY: "hard"
+      
+      # Disable natural spawning
+      SPAWN_ANIMALS: "false"
+      SPAWN_MONSTERS: "false"
+      
+      # Fast respawn
+      # RESPAWN_AT_SPAWN: "true"
+      
+      # Keep inventory on death
+      # GAME_RULES: "keepInventory=true"
+      
+      # Auto-install PvP plugins
+      SPIGET_RESOURCES: "28140,19254"  # EssentialsX, LuckPerms
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - pvp-arena-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Skyblock Server
+  # ============================================
+  server-skyblock:
+    build: .
+    container_name: mc-skyblock
+    ports:
+      - "25570:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Skyblock"
+      
+      # World type
+      LEVEL_TYPE: "flat"
+      GENERATOR_SETTINGS: '{"layers":[{"block":"air","height":1}],"biome":"plains"}'
+      
+      # Gameplay
+      MODE: "survival"
+      DIFFICULTY: "normal"
+      PVP: "false"
+      
+      # Skyblock plugins
+      SPIGET_RESOURCES: "28140,42724"  # EssentialsX, BentoBox
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - skyblock-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Hardcore Survival
+  # ============================================
+  server-hardcore:
+    build: .
+    container_name: mc-hardcore
+    ports:
+      - "25571:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Hardcore Survival"
+      
+      # Hardcore mode
+      HARDCORE: "true"
+      DIFFICULTY: "hard"
+      MODE: "survival"
+      
+      # Whitelist only
+      ENABLE_WHITELIST: "TRUE"
+      WHITELIST: "hardcore_player1,hardcore_player2"
+      
+      # Operators
+      OPS: "admin"
+      
+      # Extra difficulty
+      SPAWN_MONSTERS: "true"
+      MAX_BUILD_HEIGHT: "256"
+      
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - hardcore-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+volumes:
+  plugins-data:
+  whitelist-data:
+  performance-data:
+  custom-world-data:
+  pvp-arena-data:
+  skyblock-data:
+  hardcore-data:
+
+networks:
+  default:
+    name: minecraft-advanced
+    driver: bridge
+
