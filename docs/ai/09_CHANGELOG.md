@@ -6,6 +6,81 @@
 
 ---
 
+## [0.4.0] - 2025-10-24
+
+### Sprint 3 Completed: Advanced Features & Documentation
+
+**Added - Multi-Version Support (US-14)**
+- `docker-compose.versions.yml` - 9 pre-configured version/type examples
+- `docs/VERSIONS.md` - Complete version guide
+  - Support for all Minecraft versions (LATEST, specific, SNAPSHOT)
+  - Support for 7 server types (PAPER, SPIGOT, FORGE, FABRIC, VANILLA, PURPUR, FOLIA)
+  - Performance comparison and recommendations
+
+**Added - Modpack Support (US-15)**
+- `docker-compose.modded.yml` - 7 popular modpack configurations
+- `docs/MODPACKS.md` - Modpack installation guide
+  - CurseForge modpack support
+  - FTB (Feed The Beast) support
+  - Modrinth modpack support
+  - Generic ZIP modpack support
+  - Memory recommendations per modpack size
+  - Troubleshooting and optimization tips
+
+**Added - Advanced Networking (US-16)**
+- `docker-compose.proxy.yml` - Multi-server with Velocity proxy
+  - 1 Velocity proxy + 4 backend servers (hub, survival, creative, minigames)
+  - Complete network configuration
+- `docs/NETWORKING.md` - Multi-server networking guide
+  - Velocity and BungeeCord proxy setup
+  - Backend server configuration
+  - Security and forwarding modes
+  - Troubleshooting multi-server setups
+- `docs/API_INTEGRATION.md` - API developer guide
+  - Docker SDK examples (Python)
+  - Server lifecycle management (create, start, stop, delete)
+  - Monitoring and stats collection
+  - RCON command execution
+  - Multi-server setup via API
+  - FastAPI implementation example
+
+**Added - Advanced Environment Variables (US-17)**
+- `docker-compose.advanced.yml` - 7 advanced configuration scenarios
+- `docs/ADVANCED_CONFIG.md` - Environment variables reference
+  - Auto-install plugins (SPIGET_RESOURCES)
+  - Auto-install mods (MODRINTH_PROJECTS)
+  - Whitelist management
+  - Server operators (OPS)
+  - World generation (SEED, LEVEL_TYPE)
+  - Spawn control
+  - Configuration presets
+
+**Added - Advanced Documentation (US-18)**
+- `docs/EXAMPLES.md` - 15+ real-world configurations
+  - Vanilla survival, modded, whitelisted, creative servers
+  - Multi-server networks
+  - Specialized servers (skyblock, hardcore, pvp)
+  - Performance configurations (low-end to high-end)
+  - Production configurations
+- `docs/FAQ.md` - 50+ frequently asked questions
+  - Getting started
+  - Configuration help
+  - Management and troubleshooting
+  - Performance and security tips
+- Updated `README.md` with new badges and documentation links
+
+**Changed**
+- README.md enhanced with comprehensive features list
+- Documentation structure reorganized by audience (users, developers, AI)
+
+**Notes**
+- Sprint 3 completed successfully with 26 story points
+- All 5 User Stories implemented and tested
+- Complete documentation suite for all experience levels
+- Ready for production use
+
+---
+
 ## [0.3.0] - 2025-10-24
 
 ### Sprint 2 Completed: Testing & Automation
