@@ -42,6 +42,7 @@ jobs:
         fi
     
     - name: Create Issue US-14 - Multi-Version Support
+      id: issue-us14
       uses: actions/github-script@v7
       with:
         script: |
@@ -84,8 +85,10 @@ jobs:
             assignees: ['gastonfr24']
           });
           console.log(`Created issue US-14: #${issue.data.number}`);
+          return issue.data.number;
     
     - name: Create Issue US-15 - Modpack Support
+      id: issue-us15
       uses: actions/github-script@v7
       with:
         script: |
@@ -129,8 +132,10 @@ jobs:
             assignees: ['gastonfr24']
           });
           console.log(`Created issue US-15: #${issue.data.number}`);
+          return issue.data.number;
     
     - name: Create Issue US-16 - Advanced Networking
+      id: issue-us16
       uses: actions/github-script@v7
       with:
         script: |
@@ -173,8 +178,10 @@ jobs:
             assignees: ['gastonfr24']
           });
           console.log(`Created issue US-16: #${issue.data.number}`);
+          return issue.data.number;
     
     - name: Create Issue US-17 - Advanced Env Variables
+      id: issue-us17
       uses: actions/github-script@v7
       with:
         script: |
@@ -220,8 +227,10 @@ jobs:
             assignees: ['gastonfr24']
           });
           console.log(`Created issue US-17: #${issue.data.number}`);
+          return issue.data.number;
     
     - name: Create Issue US-18 - Advanced Documentation
+      id: issue-us18
       uses: actions/github-script@v7
       with:
         script: |
@@ -265,20 +274,88 @@ jobs:
             assignees: ['gastonfr24']
           });
           console.log(`Created issue US-18: #${issue.data.number}`);
+          return issue.data.number;
+    
+    - name: Update Sprint Document with Issue Numbers
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const sprintNum = '${{ steps.sprint.outputs.number }}';
+          const sprintFile = `docs/sprints/SPRINT_0${sprintNum}.md`;
+          
+          // Get Issue numbers from previous steps
+          const issueUS14 = '${{ steps.issue-us14.outputs.result }}';
+          const issueUS15 = '${{ steps.issue-us15.outputs.result }}';
+          const issueUS16 = '${{ steps.issue-us16.outputs.result }}';
+          const issueUS17 = '${{ steps.issue-us17.outputs.result }}';
+          const issueUS18 = '${{ steps.issue-us18.outputs.result }}';
+          
+          console.log('Issue Numbers:');
+          console.log(`  US-14: #${issueUS14}`);
+          console.log(`  US-15: #${issueUS15}`);
+          console.log(`  US-16: #${issueUS16}`);
+          console.log(`  US-17: #${issueUS17}`);
+          console.log(`  US-18: #${issueUS18}`);
+          
+          // Read sprint file
+          let content = fs.readFileSync(sprintFile, 'utf8');
+          
+          // Update with Issue numbers
+          content = content.replace(
+            /#### US-14: Soporte Multi-Version de Minecraft\n\*\*Issue:\*\* \(Pending creation\)/,
+            `#### US-14: Soporte Multi-Version de Minecraft\n**Issue:** #${issueUS14}`
+          );
+          content = content.replace(
+            /#### US-15: Soporte para Modpacks\n\*\*Issue:\*\* \(Pending creation\)/,
+            `#### US-15: Soporte para Modpacks\n**Issue:** #${issueUS15}`
+          );
+          content = content.replace(
+            /#### US-16: Networking Multi-Servidor\n\*\*Issue:\*\* \(Pending creation\)/,
+            `#### US-16: Networking Multi-Servidor\n**Issue:** #${issueUS16}`
+          );
+          content = content.replace(
+            /#### US-17: Variables de Entorno Avanzadas\n\*\*Issue:\*\* \(Pending creation\)/,
+            `#### US-17: Variables de Entorno Avanzadas\n**Issue:** #${issueUS17}`
+          );
+          content = content.replace(
+            /#### US-18: Documentación Avanzada\n\*\*Issue:\*\* \(Pending creation\)/,
+            `#### US-18: Documentación Avanzada\n**Issue:** #${issueUS18}`
+          );
+          
+          // Write back
+          fs.writeFileSync(sprintFile, content);
+          console.log(`Updated ${sprintFile} with Issue numbers`);
+    
+    - name: Commit and Push Changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add docs/sprints/SPRINT_0${{ steps.sprint.outputs.number }}.md
+        git commit -m "docs(sprint${{ steps.sprint.outputs.number }}): add Issue numbers automatically
+
+Issues created:
+- US-14: #${{ steps.issue-us14.outputs.result }}
+- US-15: #${{ steps.issue-us15.outputs.result }}
+- US-16: #${{ steps.issue-us16.outputs.result }}
+- US-17: #${{ steps.issue-us17.outputs.result }}
+- US-18: #${{ steps.issue-us18.outputs.result }}"
+        git push
     
     - name: Summary
       run: |
         echo "✅ Successfully created 5 Issues for Sprint ${{ steps.sprint.outputs.number }}"
         echo ""
         echo "Issues created:"
-        echo "  - [US-14] Multi-Version Minecraft Support"
-        echo "  - [US-15] Automated Modpack Installation Support"
-        echo "  - [US-16] Multi-Server Networking & Proxy Preparation"
-        echo "  - [US-17] Advanced Environment Variables Configuration"
-        echo "  - [US-18] Complete Advanced Documentation"
+        echo "  - US-14: #${{ steps.issue-us14.outputs.result }} - Multi-Version Minecraft Support"
+        echo "  - US-15: #${{ steps.issue-us15.outputs.result }} - Automated Modpack Installation Support"
+        echo "  - US-16: #${{ steps.issue-us16.outputs.result }} - Multi-Server Networking & Proxy Preparation"
+        echo "  - US-17: #${{ steps.issue-us17.outputs.result }} - Advanced Environment Variables Configuration"
+        echo "  - US-18: #${{ steps.issue-us18.outputs.result }} - Complete Advanced Documentation"
+        echo ""
+        echo "✅ Sprint document updated automatically with Issue numbers"
         echo ""
         echo "Next steps:"
         echo "  1. Check the Issues tab in GitHub"
-        echo "  2. Update docs/sprints/SPRINT_0${{ steps.sprint.outputs.number }}.md with Issue numbers"
-        echo "  3. Start development!"
+        echo "  2. Sprint doc already updated - ready to start development!"
 
