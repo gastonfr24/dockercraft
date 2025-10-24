@@ -978,6 +978,172 @@ Antes de abrir PR, verificar:
 
 ---
 
+## 🚫 Regla Anti-Hardcodeo y Placeholders
+
+### Filosofía
+
+**NUNCA generar código con valores placeholder o hardcodeados que no sean reales.**
+
+Si falta información, DETENER y PREGUNTAR al usuario antes de continuar.
+
+### Placeholders PROHIBIDOS
+
+NUNCA usar estos términos en código o documentación:
+
+```
+YOUR_USERNAME          TU_USUARIO
+YOUR_NAME             TU_NOMBRE
+YOUR_EMAIL            TU_EMAIL
+YOUR_REPO             TU_REPO
+YOUR_API_KEY          TU_API_KEY
+CHANGE_THIS           CAMBIAR_ESTO
+REPLACE_THIS          REEMPLAZAR_ESTO
+TODO: add value       TODO: añadir valor
+[COMPLETAR]           [TO_FILL]
+[YOUR_VALUE]          [TU_VALOR]
+XXXXX                 YYYYY
+example.com           test@test.com (si es placeholder)
+```
+
+### Qué Hacer en su Lugar
+
+#### 1. Si son Datos del Usuario/Proyecto
+
+**DETENER y PREGUNTAR:**
+
+```
+ANTES DE GENERAR CÓDIGO:
+"Necesito la siguiente información para continuar:
+- URL del repositorio GitHub
+- Nombre de la organización (si aplica)
+- Container registry (ghcr.io, docker.io, etc.)
+- ¿Qué valor debería usar para X?"
+```
+
+#### 2. Si son Configuraciones Variables
+
+**Usar variables de entorno:**
+
+```bash
+# Incorrecto
+export API_KEY="CHANGE_THIS"
+docker run -e RCON_PASSWORD="YOUR_PASSWORD" ...
+
+# Correcto
+export API_KEY="${RCON_PASSWORD}"  # Documentado en .env.example
+docker run -e RCON_PASSWORD="${RCON_PASSWORD}" ...
+```
+
+#### 3. Si son Ejemplos en Documentación
+
+**Usar datos ficticios pero CLARAMENTE marcados:**
+
+```markdown
+# Incorrecto
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+
+# Correcto (con nota clara)
+# Example: Replace with your actual repository
+git clone https://github.com/gastonfr24/dockercraft.git
+```
+
+### Datos Reales del Proyecto
+
+**Usar SIEMPRE estos valores reales:**
+
+```bash
+# Usuario GitHub
+GITHUB_USER="gastonfr24"
+GITHUB_EMAIL="gastonfr24@gmail.com"
+
+# Repositorio
+REPO_NAME="dockercraft"
+REPO_URL="https://github.com/gastonfr24/dockercraft"
+
+# Container Registry (cuando se defina)
+# CONTAINER_REGISTRY="ghcr.io/gastonfr24/dockercraft"
+
+# Proyecto
+PROJECT_NAME="DockerCraft"
+PROJECT_SCOPE="Docker template for Minecraft servers"
+```
+
+### Ejemplos de Implementación
+
+#### Correcto - CONTRIBUTING.md
+
+```bash
+# Clone your fork
+git clone https://github.com/gastonfr24/dockercraft.git
+cd dockercraft
+
+# Configure Git (use YOUR credentials)
+git config user.name "gastonfr24"
+git config user.email "gastonfr24@gmail.com"
+```
+
+#### Correcto - Scripts
+
+```bash
+#!/usr/bin/env bash
+# Use environment variables for configuration
+BACKUP_DIR="${BACKUP_DIR:-/data/backups}"
+RETENTION_DAYS="${RETENTION_DAYS:-7}"
+```
+
+#### Correcto - Documentación
+
+```markdown
+## Installation
+
+Clone the repository:
+```bash
+git clone https://github.com/gastonfr24/dockercraft.git
+```
+
+Note: If forking, replace `gastonfr24` with your username.
+```
+
+### Validación Pre-Commit
+
+Antes de commit, verificar:
+
+```bash
+# Buscar placeholders prohibidos
+grep -r "YOUR_" . --exclude-dir=.git
+grep -r "CHANGE_THIS" . --exclude-dir=.git
+grep -r "TODO.*add.*value" . --exclude-dir=.git
+grep -r "\[COMPLETAR\]" . --exclude-dir=.git
+```
+
+Si encuentra algo, CORREGIR antes de commitear.
+
+### Excepciones
+
+**Único caso permitido:** Templates de configuración CLARAMENTE marcados
+
+```bash
+# .env.example - CORRECTO
+# This is a template - copy to .env and configure
+RCON_PASSWORD=minecraft  # Change in production
+
+# .github/ISSUE_TEMPLATE - CORRECTO (son templates de GitHub)
+# Estos archivos son templates oficiales y está OK
+```
+
+### Enforcement
+
+**Esta regla es CRÍTICA.**
+
+Violaciones resultan en:
+1. PR automáticamente rechazado
+2. Commit revertido
+3. Revisión obligatoria de TODO el código
+
+**No hay excepciones sin aprobación explícita.**
+
+---
+
 ## 📚 Referencias
 
 - **Documentación del Proyecto:** `docs/ai/`
