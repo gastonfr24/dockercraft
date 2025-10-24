@@ -4,10 +4,32 @@
 
 ## [Unreleased]
 
-### En Desarrollo
-- Testing local de configuraciones
-- README.md completo con guías de uso
-- Validación con hadolint y shellcheck
+### En Desarrollo (dev branch)
+- Sprint 2: Testing & Automation
+- Backup automation scripts
+- CI/CD pipeline con GitHub Actions
+
+### Changed - Workflow
+- **NEW: Git Flow con rama `dev`**
+  - `main` ahora es SOLO producción
+  - `dev` es rama de integración para desarrollo
+  - Features se crean desde `dev`, no desde `main`
+  - Testing obligatorio en `dev` antes de merge a `main`
+- **NEW: Issues obligatorios para PRs**
+  - Todo PR debe estar vinculado a un Issue
+  - Workflow: Issue → Branch → PR → Merge
+  - Keywords automáticas: Closes #X, Fixes #X
+- **Reglas anti-hardcodeo** implementadas en `.cursor/rules/core.md`
+- Documentación completa del workflow en `.cursor/rules/git.md`
+
+### Added - Sprint 2 (In Progress)
+- `scripts/test-server.sh` - Testing automatizado comprehensivo (⚠️ NO ejecutado aún)
+- `docs/sprints/SPRINT_02.md` - Planificación de Sprint 2
+
+### Notes
+- ⚠️ Script de testing creado pero NO validado
+- Rama `dev` creada y pusheada a GitHub
+- Workflow actualizado - features ahora desde `dev`
 
 ---
 

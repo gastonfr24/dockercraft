@@ -676,46 +676,138 @@ Changes:
 
 ## Release Process
 
-### Paso a Paso
+### Paso a Paso: dev → main
 
 ```bash
-# 1. Crear release branch desde main
-git checkout main
-git pull origin main
+# 1. Asegurar que dev está listo
+git checkout dev
+git pull origin dev
+
+# 2. TESTING COMPLETO EN DEV
+# - Ejecutar test-server.sh
+# - Validar todas las features del sprint
+# - Verificar que no hay regresiones
+bash scripts/test-server.sh all
+
+# 3. Crear release branch desde dev
 git checkout -b release/v0.3.0
 
-# 2. Actualizar versión en archivos
+# 4. Actualizar versión en archivos
 # - docs/ai/09_CHANGELOG.md
 # - docs/ai/04_MEMORY.md
 # - README.md (badges, version)
+# - docs/sprints/SPRINT_XX.md (marcar completado)
 
-# 3. Commit de release
+# 5. Commit de release
 git add .
-git commit -m "chore(release): prepare v0.3.0"
+git commit -m "chore(release): prepare v0.3.0
 
-# 4. Push y crear PR
+Sprint 2 completed:
+- Feature A
+- Feature B
+- Feature C"
+
+# 6. Push release branch
 git push origin release/v0.3.0
-# Crear PR: release/v0.3.0 -> main
 
-# 5. Merge PR
+# 7. Crear PR: release/v0.3.0 → main
+# En GitHub:
+# - Title: "Release v0.3.0 - Sprint 2"
+# - Base: main ← release/v0.3.0
+# - Description: Copy from CHANGELOG
+# - Reviewers: Revisar cambios
+# - TESTING FINAL antes de aprobar
 
-# 6. Tag en main
+# 8. Merge a main
+# Una vez aprobado
+# GitHub: Merge PR (squash o merge commit)
+
+# 9. Tag en main
 git checkout main
 git pull origin main
-git tag -a v0.3.0 -m "Release v0.3.0"
+git tag -a v0.3.0 -m "Release v0.3.0 - Sprint 2 Complete
+
+Features:
+- Automated backup
+- CI/CD pipeline
+- Performance improvements"
 git push origin v0.3.0
 
-# 7. Create GitHub Release
-# - Ir a GitHub Releases
-# - Draft new release
-# - Tag: v0.3.0
-# - Title: DockerCraft v0.3.0
+# 10. Merge back to dev (important!)
+git checkout dev
+git merge main
+git push origin dev
+
+# 11. GitHub Release
+# - Ir a GitHub → Releases → Draft new release
+# - Choose tag: v0.3.0
+# - Title: DockerCraft v0.3.0 - Sprint 2
 # - Description: Copy from CHANGELOG
 # - Publish release
 
-# 8. Delete release branch
+# 12. Cleanup
 git branch -d release/v0.3.0
 git push origin --delete release/v0.3.0
+```
+
+### Pre-Release Checklist
+
+**ANTES de crear release branch:**
+
+- [ ] Todas las user stories del sprint completadas
+- [ ] Todos los PRs merged a `dev`
+- [ ] Testing completo en `dev`
+- [ ] No hay bugs críticos
+- [ ] Documentación actualizada
+- [ ] CHANGELOG actualizado
+- [ ] Tests automatizados pasando
+
+**ANTES de merge a main:**
+
+- [ ] Code review completo
+- [ ] Testing en `dev` exitoso
+- [ ] No hay conflictos
+- [ ] Version numbers actualizados
+- [ ] Release notes preparadas
+
+### Hotfix Process (Urgente en Producción)
+
+```bash
+# 1. Hotfix desde main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-bug
+
+# 2. Fix el problema
+git add .
+git commit -m "fix(critical): resolve memory leak
+
+Fixes #X"
+
+# 3. Testing rápido
+# Validar que el fix funciona
+
+# 4. PR a main
+git push origin hotfix/critical-bug
+# GitHub PR: hotfix/critical-bug → main
+
+# 5. Merge a main
+# Merge PR
+
+# 6. Tag patch version
+git checkout main
+git pull
+git tag -a v0.3.1 -m "Hotfix v0.3.1 - Critical bug fix"
+git push origin v0.3.1
+
+# 7. Merge a dev también!
+git checkout dev
+git merge main
+git push origin dev
+
+# 8. Cleanup
+git branch -d hotfix/critical-bug
+git push origin --delete hotfix/critical-bug
 ```
 
 ### Actualizar CHANGELOG
