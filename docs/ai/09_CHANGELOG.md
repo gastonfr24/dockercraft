@@ -4,32 +4,66 @@
 
 ## [Unreleased]
 
-### En Desarrollo (dev branch)
-- Sprint 2: Testing & Automation
-- Backup automation scripts
-- CI/CD pipeline con GitHub Actions
+---
 
-### Changed - Workflow
-- **NEW: Git Flow con rama `dev`**
-  - `main` ahora es SOLO producción
-  - `dev` es rama de integración para desarrollo
-  - Features se crean desde `dev`, no desde `main`
-  - Testing obligatorio en `dev` antes de merge a `main`
-- **NEW: Issues obligatorios para PRs**
-  - Todo PR debe estar vinculado a un Issue
-  - Workflow: Issue → Branch → PR → Merge
-  - Keywords automáticas: Closes #X, Fixes #X
-- **Reglas anti-hardcodeo** implementadas en `.cursor/rules/core.md`
-- Documentación completa del workflow en `.cursor/rules/git.md`
+## [0.3.0] - 2025-10-24
 
-### Added - Sprint 2 (In Progress)
-- `scripts/test-server.sh` - Testing automatizado comprehensivo (⚠️ NO ejecutado aún)
-- `docs/sprints/SPRINT_02.md` - Planificación de Sprint 2
+### Sprint 2 Completed: Testing & Automation
 
-### Notes
-- ⚠️ Script de testing creado pero NO validado
-- Rama `dev` creada y pusheada a GitHub
-- Workflow actualizado - features ahora desde `dev`
+**Added**
+- `scripts/test-server.sh` - Testing automatizado comprehensivo
+  - Valida Dockerfile build
+  - Test standalone server
+  - Test multi-server setup
+  - Health checks validation
+  - RCON connectivity test
+  - Data persistence verification
+  - Resource limits validation
+- `scripts/backup.sh` - Automated backup script
+  - Compression with tar.gz
+  - Configurable retention policy
+  - RCON integration for save-off
+  - Error handling and logging
+- `scripts/restore.sh` - Backup restoration script
+  - Validation before restore
+  - Safety backup creation
+  - Dry-run mode
+  - User confirmation prompts
+- `.github/workflows/ci.yml` - CI/CD pipeline
+  - Hadolint for Dockerfile
+  - Shellcheck for scripts
+  - YAMLlint for compose files
+  - Docker build test with cache
+  - Trivy security scanning
+  - GitHub Security integration
+- `docs/TROUBLESHOOTING.md` - Comprehensive troubleshooting guide
+  - Common problems and solutions
+  - Diagnostic commands
+  - Performance troubleshooting
+  - Security and network issues
+- `docs/sprints/SPRINT_CHECKLIST.md` - Complete sprint workflow checklist
+  - Sprint start process
+  - Issue creation mandatory
+  - Development workflow
+  - Testing and release process
+
+**Changed**
+- Workflow mejorado con Issues obligatorios
+  - `.cursor/rules/git.md` actualizado con proceso detallado
+  - Issues MUST be created BEFORE coding
+  - All PRs linked to Issues
+- Git Flow implementado completamente
+  - `main` para producción
+  - `dev` para integración
+  - Feature branches desde `dev`
+  - Release branches para deploys
+  - Testing obligatorio en `dev` antes de `main`
+
+**Notes**
+- Sprint 2 completed successfully
+- All User Stories implemented
+- CI/CD pipeline active
+- Workflow fully documented
 
 ---
 
