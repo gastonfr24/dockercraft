@@ -18,36 +18,55 @@
 
 ## Estrategia de Ramas
 
-### Modelo: GitHub Flow Simplificado
+### Modelo: Git Flow Adaptado
 
-Usamos un modelo simplificado de ramas, ideal para proyectos pequeños/medianos:
+Usamos un modelo basado en Git Flow con `dev` como rama de integración:
 
 ```
-main (protected)
+main (production)
   |
-  |-- feature/add-backup-script
-  |-- fix/health-check-timeout
-  |-- docs/update-readme
-  |-- refactor/optimize-dockerfile
-  |-- release/v0.3.0
+  └─── dev (integration)
+        |
+        |-- feature/add-backup-script
+        |-- fix/health-check-timeout
+        |-- docs/update-readme
+        |-- refactor/optimize-dockerfile
+        └-- release/v0.3.0
 ```
 
 ### Ramas Principales
 
-#### `main`
+#### `main` (PRODUCCIÓN)
 
-- Rama principal protegida
-- Siempre debe estar en estado deployable
-- Requiere PR review antes de merge
-- NO se permite push directo
-- NO se permite force push
+- **Rama de producción PROTEGIDA**
+- Contiene SOLO código probado y estable
+- Representa el estado actual en producción
+- **Requiere PR review + testing antes de merge**
+- **NO se permite push directo**
+- **NO se permite force push**
 - Tagged con versiones (v0.1.0, v0.2.0, etc.)
+- Solo recibe merges desde `dev` o `hotfix/`
 
-#### `develop` (OPCIONAL - solo si el proyecto crece)
+**Reglas estrictas:**
+- ❌ NO hacer feature branches desde main
+- ❌ NO mergear sin testing completo
+- ❌ NO mergear sin code review
+- ✅ Solo código 100% funcional
 
-- Rama de desarrollo
-- Se usa si el equipo crece o hay múltiples features en paralelo
-- Por ahora NO la usamos (GitHub Flow simple)
+#### `dev` (DESARROLLO)
+
+- **Rama de integración para desarrollo**
+- Rama base para todas las features
+- Aquí se integran y testean las features
+- Puede tener bugs temporalmente
+- Se mergea a `main` cuando hay una release
+- **Protegida** (requiere PR)
+
+**Flujo:**
+1. Features se crean desde `dev`
+2. Features se mergean a `dev`
+3. Testing en `dev`
+4. Release: `dev` → `main`
 
 ### Ramas de Trabajo
 
@@ -460,6 +479,198 @@ Screenshots, ejemplos, referencias.
 - `priority: low` - Baja prioridad
 - `wontfix` - No se implementará
 - `duplicate` - Issue duplicado
+- `sprint-1`, `sprint-2`, etc. - Sprint asociado
+
+---
+
+## Issues y PRs: Workflow Completo
+
+### Crear Issues desde User Stories
+
+Cada User Story del sprint DEBE tener un Issue en GitHub.
+
+**Proceso:**
+
+1. **Al iniciar Sprint**:
+   - Crear un Issue por cada User Story
+   - Usar template correspondiente (bug/feature)
+   - Añadir labels: `enhancement`, `sprint-X`, `priority-X`
+   - Asignar a persona responsable
+   - Referenciar en docs/sprints/SPRINT_XX.md
+
+2. **Formato del Issue**:
+   ```markdown
+   Title: [US-XX] Nombre de la User Story
+   
+   ## User Story
+   Como [ROL]
+   Quiero [FEATURE]
+   Para [BENEFIT]
+   
+   ## Acceptance Criteria
+   - [ ] Criterio 1
+   - [ ] Criterio 2
+   
+   ## Tasks
+   - [ ] Task 1
+   - [ ] Task 2
+   
+   ## Story Points
+   Estimación: X pts
+   
+   ## Sprint
+   Sprint 2
+   
+   ## Definition of Done
+   - [ ] Código implementado
+   - [ ] Tests pasando
+   - [ ] Docs actualizadas
+   - [ ] Code review aprobado
+   ```
+
+### Vincular PRs con Issues
+
+**OBLIGATORIO**: Todo PR debe estar vinculado a un Issue.
+
+**Métodos de vinculación:**
+
+1. **En el título del PR**:
+   ```
+   feat(backup): implement automated backup script [#8]
+   ```
+
+2. **En la descripción del PR**:
+   ```markdown
+   ## Related Issues
+   Closes #8
+   Fixes #12
+   Relates to #15
+   ```
+
+3. **En commits**:
+   ```bash
+   git commit -m "feat(backup): add backup script
+
+   Implements automated backup with compression.
+   
+   Closes #8"
+   ```
+
+**Keywords que cierran issues automáticamente:**
+- `Closes #X`
+- `Fixes #X`
+- `Resolves #X`
+- `Closes: #X`
+
+### Workflow: Issue → Branch → PR → Merge
+
+```bash
+# 1. Issue creado en GitHub: #8
+
+# 2. Crear branch desde dev
+git checkout dev
+git pull origin dev
+git checkout -b feature/backup-automation
+
+# 3. Implementar y commit
+git add .
+git commit -m "feat(backup): implement backup script
+
+Closes #8"
+
+# 4. Push y crear PR
+git push origin feature/backup-automation
+# En GitHub: Create PR
+# - Title: "feat(backup): implement automated backup [#8]"
+# - Description: "Closes #8"
+# - Base: dev (NO main)
+# - Reviewers: asignar
+# - Labels: enhancement, sprint-2
+
+# 5. Code review y merge a dev
+# PR aprobado → Merge to dev
+# Issue #8 se cierra automáticamente
+
+# 6. Testing en dev
+# Validar que funciona
+
+# 7. Release: dev → main
+# Solo cuando sprint completo
+```
+
+### Reglas de Vinculación
+
+1. **NUNCA** crear feature branch desde `main`
+2. **SIEMPRE** crear desde `dev`
+3. **SIEMPRE** vincular PR con Issue
+4. **SIEMPRE** testear en `dev` antes de `main`
+5. **NUNCA** mergear a `main` sin testing
+
+### Checklist antes de crear PR
+
+- [ ] Issue existe y está asignado
+- [ ] Branch creada desde `dev`
+- [ ] Commits siguen conventional commits
+- [ ] Tests locales pasando
+- [ ] PR title referencia el issue
+- [ ] PR description tiene "Closes #X"
+- [ ] Base branch es `dev` (NO main)
+- [ ] Documentación actualizada
+
+### Ejemplo Completo
+
+**Issue #8:**
+```
+Title: [US-09] Automated Backup Script
+Labels: enhancement, sprint-2, priority-high
+Assigned: gastonfr24
+```
+
+**Branch:**
+```bash
+feature/backup-automation
+```
+
+**Commits:**
+```
+feat(backup): add backup.sh with compression
+
+Implements automated backup system with configurable retention.
+
+Relates to #8
+
+feat(backup): add restore functionality
+
+Adds ability to restore from backups.
+
+Relates to #8
+
+docs(backup): update README with backup instructions
+
+Closes #8
+```
+
+**PR:**
+```
+Title: feat(backup): implement automated backup system [#8]
+Base: dev ← feature/backup-automation
+Description: 
+Implements US-09 automated backup script.
+
+Closes #8
+
+Changes:
+- Added backup.sh
+- Added restore.sh
+- Updated README
+- Added tests
+```
+
+**Resultado:**
+- PR merged to `dev` ✅
+- Issue #8 closed automáticamente ✅
+- Branch eliminada ✅
+- Sprint tracking actualizado ✅
 
 ---
 
