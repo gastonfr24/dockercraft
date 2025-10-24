@@ -1,0 +1,250 @@
+# ============================================
+# DockerCraft - Modpack Examples
+# ============================================
+# Pre-configured modded server examples
+# Usage: docker-compose -f docker-compose.modded.yml up <service-name>
+
+version: '3.8'
+
+services:
+  # ============================================
+  # All The Mods 9 (Forge 1.20.1)
+  # ============================================
+  atm9:
+    build: .
+    container_name: mc-atm9
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.20.1"
+      MEMORY: "10G"
+      SERVER_NAME: "All The Mods 9"
+      # CurseForge modpack
+      CURSEFORGE_FILES: "https://www.curseforge.com/minecraft/modpacks/all-the-mods-9"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      # Performance settings for heavy modpack
+      USE_AIKAR_FLAGS: "true"
+      MAX_TICK_TIME: "-1"
+    volumes:
+      - atm9-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 12G
+          cpus: '4'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # FTB StoneBlock 3 (Forge 1.18.2)
+  # ============================================
+  ftb-stoneblock3:
+    build: .
+    container_name: mc-ftb-stoneblock3
+    ports:
+      - "25566:25565"
+      - "25576:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.18.2"
+      MEMORY: "8G"
+      SERVER_NAME: "FTB StoneBlock 3"
+      # FTB modpack
+      FTB_MODPACK_ID: "ftbpresentsintegrationstoneblockedition"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - ftb-stoneblock3-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+          cpus: '3'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # RLCraft (Forge 1.12.2)
+  # ============================================
+  rlcraft:
+    build: .
+    container_name: mc-rlcraft
+    ports:
+      - "25567:25565"
+      - "25577:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.12.2"
+      MEMORY: "6G"
+      SERVER_NAME: "RLCraft"
+      # CurseForge file ID
+      CF_SERVER_MOD: "https://www.curseforge.com/minecraft/modpacks/rlcraft"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+      DIFFICULTY: "hard"
+    volumes:
+      - rlcraft-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '2'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Fabric Performance Pack (Fabric 1.20.1)
+  # ============================================
+  fabric-performance:
+    build: .
+    container_name: mc-fabric-performance
+    ports:
+      - "25568:25565"
+      - "25578:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
+      VERSION: "1.20.1"
+      MEMORY: "4G"
+      SERVER_NAME: "Fabric Performance"
+      # Modrinth mods (performance pack)
+      MODRINTH_PROJECTS: |
+        sodium
+        lithium
+        starlight
+        ferritecore
+        lazydfu
+        memoryleakfix
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - fabric-performance-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+          cpus: '2'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Fabric All of Fabric 6 (Fabric 1.19.2)
+  # ============================================
+  aof6:
+    build: .
+    container_name: mc-aof6
+    ports:
+      - "25569:25565"
+      - "25579:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
+      VERSION: "1.19.2"
+      MEMORY: "6G"
+      SERVER_NAME: "All of Fabric 6"
+      # CurseForge modpack
+      MODPACK: "https://www.curseforge.com/minecraft/modpacks/all-of-fabric-6"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - aof6-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+          cpus: '3'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Create: Above and Beyond (Forge 1.16.5)
+  # ============================================
+  create-aab:
+    build: .
+    container_name: mc-create-aab
+    ports:
+      - "25570:25565"
+      - "25580:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.16.5"
+      MEMORY: "8G"
+      SERVER_NAME: "Create: Above and Beyond"
+      # Generic modpack URL
+      GENERIC_PACK: "https://edge.forgecdn.net/files/3673/652/CreateAboveandBeyond-1.3.zip"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - create-aab-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+          cpus: '3'
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Vault Hunters (Forge 1.18.2)
+  # ============================================
+  vault-hunters:
+    build: .
+    container_name: mc-vault-hunters
+    ports:
+      - "25571:25565"
+      - "25581:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.18.2"
+      MEMORY: "8G"
+      SERVER_NAME: "Vault Hunters"
+      # CurseForge
+      CURSEFORGE_FILES: "https://www.curseforge.com/minecraft/modpacks/vault-hunters-official-modpack"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+      MAX_PLAYERS: 10
+    volumes:
+      - vault-hunters-data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 10G
+          cpus: '3'
+    tty: true
+    stdin_open: true
+
+volumes:
+  atm9-data:
+  ftb-stoneblock3-data:
+  rlcraft-data:
+  fabric-performance-data:
+  aof6-data:
+  create-aab-data:
+  vault-hunters-data:
+
+networks:
+  default:
+    name: minecraft-modded
+    driver: bridge
+
