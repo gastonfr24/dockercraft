@@ -579,6 +579,21 @@ Al iniciar Sprint 2, crear estos Issues:
 ```
 
 **Orden de creación:**
+
+OPCIÓN A - AUTOMÁTICA (Recomendado):
+```bash
+# Crear rama de sprint
+git checkout dev
+git checkout -b sprint/3
+
+# Push rama - esto triggerea automáticamente el workflow
+git push origin sprint/3
+
+# GitHub Actions creará automáticamente los 5 Issues
+# Esperar 10 segundos y verificar en pestaña Issues
+```
+
+OPCIÓN B - MANUAL:
 1. Ir a GitHub Issues
 2. Click "New Issue"
 3. Elegir template
