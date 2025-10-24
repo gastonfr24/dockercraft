@@ -485,18 +485,127 @@ Screenshots, ejemplos, referencias.
 
 ## Issues y PRs: Workflow Completo
 
-### Crear Issues desde User Stories
+### OBLIGATORIO: Crear Issues al Iniciar Sprint
 
-Cada User Story del sprint DEBE tener un Issue en GitHub.
+**⚠️ ANTES de escribir código, crear TODOS los Issues del sprint en GitHub.**
 
-**Proceso:**
+#### Proceso de Inicio de Sprint
 
-1. **Al iniciar Sprint**:
-   - Crear un Issue por cada User Story
-   - Usar template correspondiente (bug/feature)
-   - Añadir labels: `enhancement`, `sprint-X`, `priority-X`
-   - Asignar a persona responsable
-   - Referenciar en docs/sprints/SPRINT_XX.md
+```bash
+# 1. Sprint Planning completado
+# - docs/sprints/SPRINT_XX.md creado
+# - User Stories definidas con story points
+
+# 2. Ir a GitHub Issues
+# https://github.com/gastonfr24/dockercraft/issues/new
+
+# 3. Crear UN Issue por cada User Story
+# Usar template de Feature Request para nuevas features
+# Usar template de Bug Report para fixes
+```
+
+#### Template de Issue desde User Story
+
+**Para cada US en el sprint, crear Issue con:**
+
+```markdown
+Title: [US-XX] Nombre de la User Story
+
+## User Story
+Como [ROL]
+Quiero [FEATURE]
+Para [BENEFIT]
+
+## Acceptance Criteria
+- [ ] Criterio 1
+- [ ] Criterio 2
+- [ ] Criterio 3
+
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Story Points
+Estimación: X pts
+
+## Sprint
+Sprint X
+
+## Definition of Done
+- [ ] Código implementado y testeado
+- [ ] Tests pasando
+- [ ] Documentación actualizada
+- [ ] Code review aprobado
+- [ ] Merged a dev
+
+## Labels
+- enhancement (o bug)
+- sprint-X
+- priority-high/medium/low
+
+## Assigned
+@gastonfr24
+```
+
+#### Ejemplo Real: Sprint 2
+
+Al iniciar Sprint 2, crear estos Issues:
+
+```
+✅ Issue #1: [US-08] Testing Local del Servidor
+   Labels: enhancement, sprint-2, priority-high
+   Story Points: 5
+
+✅ Issue #2: [US-09] Automated Backup Script
+   Labels: enhancement, sprint-2, priority-high
+   Story Points: 8
+
+✅ Issue #3: [US-10] CI/CD con GitHub Actions
+   Labels: enhancement, sprint-2, priority-medium
+   Story Points: 8
+
+✅ Issue #4: [US-11] Script de Restore
+   Labels: enhancement, sprint-2, priority-medium
+   Story Points: 3
+
+✅ Issue #5: [US-12] Performance Optimization
+   Labels: enhancement, sprint-2, priority-low
+   Story Points: 5
+
+✅ Issue #6: [US-13] Troubleshooting Guide
+   Labels: documentation, sprint-2, priority-low
+   Story Points: 3
+```
+
+**Orden de creación:**
+1. Ir a GitHub Issues
+2. Click "New Issue"
+3. Elegir template
+4. Llenar TODOS los campos
+5. Añadir labels
+6. Asignar a persona
+7. Create Issue
+8. Repetir para CADA User Story
+
+**⚠️ NO empezar a codear hasta que TODOS los Issues estén creados.**
+
+### Vincular Issues en Sprint Doc
+
+Después de crear los Issues, actualizar `docs/sprints/SPRINT_XX.md`:
+
+```markdown
+#### US-09: Automated Backup Script
+**Issue:** #2
+**Como** administrador
+**Quiero** backups automáticos
+**Para** no perder datos
+
+**Prioridad:** Alta
+**Estimación:** 8 puntos
+**Rama:** `feature/backup-automation`
+**Estado:** 🚧 In Progress
+```
 
 2. **Formato del Issue**:
    ```markdown
