@@ -1,8 +1,8 @@
 # Sprint 2 - Testing & Automation
 
-**Duración:** 2025-10-24 - 2025-11-07 (2 semanas)  
+**Duración:** 2025-10-24 (1 día)
 **Objetivo:** Validar funcionalidad del servidor y automatizar procesos clave  
-**Estado:** 🚧 En progreso
+**Estado:** ✅ Completado
 
 ---
 

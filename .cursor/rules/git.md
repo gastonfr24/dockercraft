@@ -18,36 +18,55 @@
 
 ## Estrategia de Ramas
 
-### Modelo: GitHub Flow Simplificado
+### Modelo: Git Flow Adaptado
 
-Usamos un modelo simplificado de ramas, ideal para proyectos pequeños/medianos:
+Usamos un modelo basado en Git Flow con `dev` como rama de integración:
 
 ```
-main (protected)
+main (production)
   |
-  |-- feature/add-backup-script
-  |-- fix/health-check-timeout
-  |-- docs/update-readme
-  |-- refactor/optimize-dockerfile
-  |-- release/v0.3.0
+  └─── dev (integration)
+        |
+        |-- feature/add-backup-script
+        |-- fix/health-check-timeout
+        |-- docs/update-readme
+        |-- refactor/optimize-dockerfile
+        └-- release/v0.3.0
 ```
 
 ### Ramas Principales
 
-#### `main`
+#### `main` (PRODUCCIÓN)
 
-- Rama principal protegida
-- Siempre debe estar en estado deployable
-- Requiere PR review antes de merge
-- NO se permite push directo
-- NO se permite force push
+- **Rama de producción PROTEGIDA**
+- Contiene SOLO código probado y estable
+- Representa el estado actual en producción
+- **Requiere PR review + testing antes de merge**
+- **NO se permite push directo**
+- **NO se permite force push**
 - Tagged con versiones (v0.1.0, v0.2.0, etc.)
+- Solo recibe merges desde `dev` o `hotfix/`
 
-#### `develop` (OPCIONAL - solo si el proyecto crece)
+**Reglas estrictas:**
+- ❌ NO hacer feature branches desde main
+- ❌ NO mergear sin testing completo
+- ❌ NO mergear sin code review
+- ✅ Solo código 100% funcional
 
-- Rama de desarrollo
-- Se usa si el equipo crece o hay múltiples features en paralelo
-- Por ahora NO la usamos (GitHub Flow simple)
+#### `dev` (DESARROLLO)
+
+- **Rama de integración para desarrollo**
+- Rama base para todas las features
+- Aquí se integran y testean las features
+- Puede tener bugs temporalmente
+- Se mergea a `main` cuando hay una release
+- **Protegida** (requiere PR)
+
+**Flujo:**
+1. Features se crean desde `dev`
+2. Features se mergean a `dev`
+3. Testing en `dev`
+4. Release: `dev` → `main`
 
 ### Ramas de Trabajo
 
@@ -460,51 +479,444 @@ Screenshots, ejemplos, referencias.
 - `priority: low` - Baja prioridad
 - `wontfix` - No se implementará
 - `duplicate` - Issue duplicado
+- `sprint-1`, `sprint-2`, etc. - Sprint asociado
+
+---
+
+## Issues y PRs: Workflow Completo
+
+### OBLIGATORIO: Crear Issues al Iniciar Sprint
+
+**⚠️ ANTES de escribir código, crear TODOS los Issues del sprint en GitHub.**
+
+#### Proceso de Inicio de Sprint
+
+```bash
+# 1. Sprint Planning completado
+# - docs/sprints/SPRINT_XX.md creado
+# - User Stories definidas con story points
+
+# 2. Ir a GitHub Issues
+# https://github.com/gastonfr24/dockercraft/issues/new
+
+# 3. Crear UN Issue por cada User Story
+# Usar template de Feature Request para nuevas features
+# Usar template de Bug Report para fixes
+```
+
+#### Template de Issue desde User Story
+
+**Para cada US en el sprint, crear Issue con:**
+
+```markdown
+Title: [US-XX] Nombre de la User Story
+
+## User Story
+Como [ROL]
+Quiero [FEATURE]
+Para [BENEFIT]
+
+## Acceptance Criteria
+- [ ] Criterio 1
+- [ ] Criterio 2
+- [ ] Criterio 3
+
+## Tasks
+- [ ] Task 1
+- [ ] Task 2
+- [ ] Task 3
+
+## Story Points
+Estimación: X pts
+
+## Sprint
+Sprint X
+
+## Definition of Done
+- [ ] Código implementado y testeado
+- [ ] Tests pasando
+- [ ] Documentación actualizada
+- [ ] Code review aprobado
+- [ ] Merged a dev
+
+## Labels
+- enhancement (o bug)
+- sprint-X
+- priority-high/medium/low
+
+## Assigned
+@gastonfr24
+```
+
+#### Ejemplo Real: Sprint 2
+
+Al iniciar Sprint 2, crear estos Issues:
+
+```
+✅ Issue #1: [US-08] Testing Local del Servidor
+   Labels: enhancement, sprint-2, priority-high
+   Story Points: 5
+
+✅ Issue #2: [US-09] Automated Backup Script
+   Labels: enhancement, sprint-2, priority-high
+   Story Points: 8
+
+✅ Issue #3: [US-10] CI/CD con GitHub Actions
+   Labels: enhancement, sprint-2, priority-medium
+   Story Points: 8
+
+✅ Issue #4: [US-11] Script de Restore
+   Labels: enhancement, sprint-2, priority-medium
+   Story Points: 3
+
+✅ Issue #5: [US-12] Performance Optimization
+   Labels: enhancement, sprint-2, priority-low
+   Story Points: 5
+
+✅ Issue #6: [US-13] Troubleshooting Guide
+   Labels: documentation, sprint-2, priority-low
+   Story Points: 3
+```
+
+**Orden de creación:**
+1. Ir a GitHub Issues
+2. Click "New Issue"
+3. Elegir template
+4. Llenar TODOS los campos
+5. Añadir labels
+6. Asignar a persona
+7. Create Issue
+8. Repetir para CADA User Story
+
+**⚠️ NO empezar a codear hasta que TODOS los Issues estén creados.**
+
+### Vincular Issues en Sprint Doc
+
+Después de crear los Issues, actualizar `docs/sprints/SPRINT_XX.md`:
+
+```markdown
+#### US-09: Automated Backup Script
+**Issue:** #2
+**Como** administrador
+**Quiero** backups automáticos
+**Para** no perder datos
+
+**Prioridad:** Alta
+**Estimación:** 8 puntos
+**Rama:** `feature/backup-automation`
+**Estado:** 🚧 In Progress
+```
+
+2. **Formato del Issue**:
+   ```markdown
+   Title: [US-XX] Nombre de la User Story
+   
+   ## User Story
+   Como [ROL]
+   Quiero [FEATURE]
+   Para [BENEFIT]
+   
+   ## Acceptance Criteria
+   - [ ] Criterio 1
+   - [ ] Criterio 2
+   
+   ## Tasks
+   - [ ] Task 1
+   - [ ] Task 2
+   
+   ## Story Points
+   Estimación: X pts
+   
+   ## Sprint
+   Sprint 2
+   
+   ## Definition of Done
+   - [ ] Código implementado
+   - [ ] Tests pasando
+   - [ ] Docs actualizadas
+   - [ ] Code review aprobado
+   ```
+
+### Vincular PRs con Issues
+
+**OBLIGATORIO**: Todo PR debe estar vinculado a un Issue.
+
+**Métodos de vinculación:**
+
+1. **En el título del PR**:
+   ```
+   feat(backup): implement automated backup script [#8]
+   ```
+
+2. **En la descripción del PR**:
+   ```markdown
+   ## Related Issues
+   Closes #8
+   Fixes #12
+   Relates to #15
+   ```
+
+3. **En commits**:
+   ```bash
+   git commit -m "feat(backup): add backup script
+
+   Implements automated backup with compression.
+   
+   Closes #8"
+   ```
+
+**Keywords que cierran issues automáticamente:**
+- `Closes #X`
+- `Fixes #X`
+- `Resolves #X`
+- `Closes: #X`
+
+### Workflow: Issue → Branch → PR → Merge
+
+```bash
+# 1. Issue creado en GitHub: #8
+
+# 2. Crear branch desde dev
+git checkout dev
+git pull origin dev
+git checkout -b feature/backup-automation
+
+# 3. Implementar y commit
+git add .
+git commit -m "feat(backup): implement backup script
+
+Closes #8"
+
+# 4. Push y crear PR
+git push origin feature/backup-automation
+# En GitHub: Create PR
+# - Title: "feat(backup): implement automated backup [#8]"
+# - Description: "Closes #8"
+# - Base: dev (NO main)
+# - Reviewers: asignar
+# - Labels: enhancement, sprint-2
+
+# 5. Code review y merge a dev
+# PR aprobado → Merge to dev
+# Issue #8 se cierra automáticamente
+
+# 6. Testing en dev
+# Validar que funciona
+
+# 7. Release: dev → main
+# Solo cuando sprint completo
+```
+
+### Reglas de Vinculación
+
+1. **NUNCA** crear feature branch desde `main`
+2. **SIEMPRE** crear desde `dev`
+3. **SIEMPRE** vincular PR con Issue
+4. **SIEMPRE** testear en `dev` antes de `main`
+5. **NUNCA** mergear a `main` sin testing
+
+### Checklist antes de crear PR
+
+- [ ] Issue existe y está asignado
+- [ ] Branch creada desde `dev`
+- [ ] Commits siguen conventional commits
+- [ ] Tests locales pasando
+- [ ] PR title referencia el issue
+- [ ] PR description tiene "Closes #X"
+- [ ] Base branch es `dev` (NO main)
+- [ ] Documentación actualizada
+
+### Ejemplo Completo
+
+**Issue #8:**
+```
+Title: [US-09] Automated Backup Script
+Labels: enhancement, sprint-2, priority-high
+Assigned: gastonfr24
+```
+
+**Branch:**
+```bash
+feature/backup-automation
+```
+
+**Commits:**
+```
+feat(backup): add backup.sh with compression
+
+Implements automated backup system with configurable retention.
+
+Relates to #8
+
+feat(backup): add restore functionality
+
+Adds ability to restore from backups.
+
+Relates to #8
+
+docs(backup): update README with backup instructions
+
+Closes #8
+```
+
+**PR:**
+```
+Title: feat(backup): implement automated backup system [#8]
+Base: dev ← feature/backup-automation
+Description: 
+Implements US-09 automated backup script.
+
+Closes #8
+
+Changes:
+- Added backup.sh
+- Added restore.sh
+- Updated README
+- Added tests
+```
+
+**Resultado:**
+- PR merged to `dev` ✅
+- Issue #8 closed automáticamente ✅
+- Branch eliminada ✅
+- Sprint tracking actualizado ✅
 
 ---
 
 ## Release Process
 
-### Paso a Paso
+### Paso a Paso: dev → main
 
 ```bash
-# 1. Crear release branch desde main
-git checkout main
-git pull origin main
+# 1. Asegurar que dev está listo
+git checkout dev
+git pull origin dev
+
+# 2. TESTING COMPLETO EN DEV
+# - Ejecutar test-server.sh
+# - Validar todas las features del sprint
+# - Verificar que no hay regresiones
+bash scripts/test-server.sh all
+
+# 3. Crear release branch desde dev
 git checkout -b release/v0.3.0
 
-# 2. Actualizar versión en archivos
+# 4. Actualizar versión en archivos
 # - docs/ai/09_CHANGELOG.md
 # - docs/ai/04_MEMORY.md
 # - README.md (badges, version)
+# - docs/sprints/SPRINT_XX.md (marcar completado)
 
-# 3. Commit de release
+# 5. Commit de release
 git add .
-git commit -m "chore(release): prepare v0.3.0"
+git commit -m "chore(release): prepare v0.3.0
 
-# 4. Push y crear PR
+Sprint 2 completed:
+- Feature A
+- Feature B
+- Feature C"
+
+# 6. Push release branch
 git push origin release/v0.3.0
-# Crear PR: release/v0.3.0 -> main
 
-# 5. Merge PR
+# 7. Crear PR: release/v0.3.0 → main
+# En GitHub:
+# - Title: "Release v0.3.0 - Sprint 2"
+# - Base: main ← release/v0.3.0
+# - Description: Copy from CHANGELOG
+# - Reviewers: Revisar cambios
+# - TESTING FINAL antes de aprobar
 
-# 6. Tag en main
+# 8. Merge a main
+# Una vez aprobado
+# GitHub: Merge PR (squash o merge commit)
+
+# 9. Tag en main
 git checkout main
 git pull origin main
-git tag -a v0.3.0 -m "Release v0.3.0"
+git tag -a v0.3.0 -m "Release v0.3.0 - Sprint 2 Complete
+
+Features:
+- Automated backup
+- CI/CD pipeline
+- Performance improvements"
 git push origin v0.3.0
 
-# 7. Create GitHub Release
-# - Ir a GitHub Releases
-# - Draft new release
-# - Tag: v0.3.0
-# - Title: DockerCraft v0.3.0
+# 10. Merge back to dev (important!)
+git checkout dev
+git merge main
+git push origin dev
+
+# 11. GitHub Release
+# - Ir a GitHub → Releases → Draft new release
+# - Choose tag: v0.3.0
+# - Title: DockerCraft v0.3.0 - Sprint 2
 # - Description: Copy from CHANGELOG
 # - Publish release
 
-# 8. Delete release branch
+# 12. Cleanup
 git branch -d release/v0.3.0
 git push origin --delete release/v0.3.0
+```
+
+### Pre-Release Checklist
+
+**ANTES de crear release branch:**
+
+- [ ] Todas las user stories del sprint completadas
+- [ ] Todos los PRs merged a `dev`
+- [ ] Testing completo en `dev`
+- [ ] No hay bugs críticos
+- [ ] Documentación actualizada
+- [ ] CHANGELOG actualizado
+- [ ] Tests automatizados pasando
+
+**ANTES de merge a main:**
+
+- [ ] Code review completo
+- [ ] Testing en `dev` exitoso
+- [ ] No hay conflictos
+- [ ] Version numbers actualizados
+- [ ] Release notes preparadas
+
+### Hotfix Process (Urgente en Producción)
+
+```bash
+# 1. Hotfix desde main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-bug
+
+# 2. Fix el problema
+git add .
+git commit -m "fix(critical): resolve memory leak
+
+Fixes #X"
+
+# 3. Testing rápido
+# Validar que el fix funciona
+
+# 4. PR a main
+git push origin hotfix/critical-bug
+# GitHub PR: hotfix/critical-bug → main
+
+# 5. Merge a main
+# Merge PR
+
+# 6. Tag patch version
+git checkout main
+git pull
+git tag -a v0.3.1 -m "Hotfix v0.3.1 - Critical bug fix"
+git push origin v0.3.1
+
+# 7. Merge a dev también!
+git checkout dev
+git merge main
+git push origin dev
+
+# 8. Cleanup
+git branch -d hotfix/critical-bug
+git push origin --delete hotfix/critical-bug
 ```
 
 ### Actualizar CHANGELOG

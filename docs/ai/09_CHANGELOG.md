@@ -4,10 +4,66 @@
 
 ## [Unreleased]
 
-### En Desarrollo
-- Testing local de configuraciones
-- README.md completo con guías de uso
-- Validación con hadolint y shellcheck
+---
+
+## [0.3.0] - 2025-10-24
+
+### Sprint 2 Completed: Testing & Automation
+
+**Added**
+- `scripts/test-server.sh` - Testing automatizado comprehensivo
+  - Valida Dockerfile build
+  - Test standalone server
+  - Test multi-server setup
+  - Health checks validation
+  - RCON connectivity test
+  - Data persistence verification
+  - Resource limits validation
+- `scripts/backup.sh` - Automated backup script
+  - Compression with tar.gz
+  - Configurable retention policy
+  - RCON integration for save-off
+  - Error handling and logging
+- `scripts/restore.sh` - Backup restoration script
+  - Validation before restore
+  - Safety backup creation
+  - Dry-run mode
+  - User confirmation prompts
+- `.github/workflows/ci.yml` - CI/CD pipeline
+  - Hadolint for Dockerfile
+  - Shellcheck for scripts
+  - YAMLlint for compose files
+  - Docker build test with cache
+  - Trivy security scanning
+  - GitHub Security integration
+- `docs/TROUBLESHOOTING.md` - Comprehensive troubleshooting guide
+  - Common problems and solutions
+  - Diagnostic commands
+  - Performance troubleshooting
+  - Security and network issues
+- `docs/sprints/SPRINT_CHECKLIST.md` - Complete sprint workflow checklist
+  - Sprint start process
+  - Issue creation mandatory
+  - Development workflow
+  - Testing and release process
+
+**Changed**
+- Workflow mejorado con Issues obligatorios
+  - `.cursor/rules/git.md` actualizado con proceso detallado
+  - Issues MUST be created BEFORE coding
+  - All PRs linked to Issues
+- Git Flow implementado completamente
+  - `main` para producción
+  - `dev` para integración
+  - Feature branches desde `dev`
+  - Release branches para deploys
+  - Testing obligatorio en `dev` antes de `main`
+
+**Notes**
+- Sprint 2 completed successfully
+- All User Stories implemented
+- CI/CD pipeline active
+- Workflow fully documented
 
 ---
 
