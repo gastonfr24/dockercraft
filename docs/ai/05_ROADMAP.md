@@ -364,33 +364,83 @@ CREATE TABLE servers (
 
 ---
 
-## 🏃 Sprint 3: Funcionalidades Avanzadas
+## 🏃 Sprint 3: Advanced Features & Documentation
 
 **Duración:** 2 semanas  
-**Objetivo:** Agregar autenticación, backups, monitoreo básico y WebSocket para logs.  
-**Estado:** ⏳ Pendiente
+**Objetivo:** Soporte multi-version, modpacks, networking avanzado y documentación completa  
+**Estado:** 📝 Planificado
 
 ### **User Stories**
 
-1. **Como admin, quiero autenticarme en la API**
-   - POST `/api/auth/login` con username/password
-   - Recibir JWT token
-   - Usar token en requests subsecuentes
+#### US-14: Soporte Multi-Version de Minecraft
+**Como** administrador  
+**Quiero** poder elegir diferentes versiones de Minecraft  
+**Para** soportar diferentes necesidades de jugadores
 
-2. **Como admin, quiero hacer backup de un servidor**
-   - POST `/api/servers/:id/backup`
-   - API copia volumen y comprime
-   - Retorna backup ID y tamaño
+**Acceptance Criteria:**
+- [ ] Variable VERSION soporta versiones específicas (1.20.1, 1.19.4, etc)
+- [ ] Variable TYPE soporta PAPER, SPIGOT, FORGE, FABRIC
+- [ ] Documentación de versiones compatibles
+- [ ] Ejemplos en docker-compose para diferentes versiones
+- [ ] Testing de al menos 3 versiones diferentes
 
-3. **Como admin, quiero restaurar un backup**
-   - POST `/api/servers/:id/restore`
-   - API restaura desde backup
-   - Servidor reinicia con datos restaurados
+**Story Points:** 5
 
-4. **Como admin, quiero ver logs en tiempo real**
-   - WebSocket `/ws/servers/:id/logs`
-   - Stream de logs del contenedor
-   - Posibilidad de enviar comandos
+#### US-15: Soporte para Modpacks
+**Como** administrador  
+**Quiero** poder instalar modpacks automáticamente  
+**Para** facilitar la configuración de servidores modded
+
+**Acceptance Criteria:**
+- [ ] Soporte para CurseForge modpacks
+- [ ] Soporte para FTB modpacks
+- [ ] Variable MODPACK_URL o CURSEFORGE_FILE
+- [ ] Documentación de instalación de modpacks
+- [ ] Ejemplo funcional con modpack popular
+
+**Story Points:** 8
+
+#### US-16: Networking Multi-Servidor
+**Como** desarrollador de API  
+**Quiero** que los servidores puedan comunicarse entre sí  
+**Para** preparar integración con proxy (BungeeCord/Velocity)
+
+**Acceptance Criteria:**
+- [ ] Docker network configurado correctamente
+- [ ] Variables para configurar proxy mode
+- [ ] Documentación de networking
+- [ ] Ejemplo con 3 servidores + proxy
+- [ ] Guía de integración para API externa
+
+**Story Points:** 5
+
+#### US-17: Variables de Entorno Avanzadas
+**Como** administrador  
+**Quiero** más control sobre la configuración del servidor  
+**Para** optimizar para casos de uso específicos
+
+**Acceptance Criteria:**
+- [ ] Nuevas variables documentadas en .env.example
+- [ ] Soporte para PLUGINS automáticos
+- [ ] Soporte para MODS automáticos
+- [ ] Configuración de whitelist via variable
+- [ ] OPS automáticos via variable
+
+**Story Points:** 3
+
+#### US-18: Documentación Avanzada
+**Como** nuevo usuario  
+**Quiero** documentación completa y clara  
+**Para** poder usar el proyecto sin problemas
+
+**Acceptance Criteria:**
+- [ ] README.md completo con todos los casos de uso
+- [ ] Guía de troubleshooting expandida
+- [ ] Ejemplos de configuraciones comunes
+- [ ] FAQ section
+- [ ] Video tutorial (opcional)
+
+**Story Points:** 5
 
 ### **Tareas Técnicas**
 
