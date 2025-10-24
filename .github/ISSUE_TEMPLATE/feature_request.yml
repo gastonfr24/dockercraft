@@ -1,0 +1,92 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: "[FEATURE] "
+labels: ["enhancement"]
+assignees:
+  - gastonfr24
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature!
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Clear description of the feature
+      placeholder: Add support for automatic backups
+    validations:
+      required: true
+      
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature needed?
+      placeholder: Users need a way to backup their worlds automatically
+    validations:
+      required: true
+      
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you implement this?
+      placeholder: |
+        - Add backup script in /scripts
+        - Add ENV vars: BACKUP_ENABLED, BACKUP_INTERVAL
+        - Use cron for scheduling
+    validations:
+      required: true
+      
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Other ways to solve this problem?
+      placeholder: Manual backups, external backup tools
+      
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Critical (blocking current usage)
+        - High (important for production)
+        - Medium (nice to have)
+        - Low (future enhancement)
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex do you think this is?
+      options:
+        - Simple (few hours)
+        - Medium (1-2 days)
+        - Complex (1+ weeks)
+        - Unknown
+        
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, examples, references
+      
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: This feature aligns with project scope (Docker template only)
+          required: true
+        - label: I am willing to help implement this
+          required: false
+

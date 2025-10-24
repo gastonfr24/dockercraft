@@ -1,0 +1,62 @@
+# Cursor Rules — DockerCraft
+
+Este proyecto usa reglas modulares organizadas en `.cursor/rules/`
+
+## 📚 Reglas Modulares
+
+Las reglas están separadas por tema para facilitar mantenimiento:
+
+- **`core.md`** - Principios, arquitectura y metodología Scrum
+- **`docker.md`** - Reglas específicas de Docker y containers
+- **`shell.md`** - Reglas de scripting Shell/Bash
+- **`git.md`** - Workflow de Git y commits
+- **`documentation.md`** - Reglas de documentación
+- **`testing.md`** - Testing y QA
+
+## 🎯 Para IA: Lectura Obligatoria
+
+Antes de hacer cualquier cambio, DEBES leer:
+
+1. `.cursor/rules/core.md` - Principios y alcance del proyecto
+2. `docs/ai/01_CONTEXT.md` - Contexto completo
+3. `docs/ai/02_ARCHITECTURE.md` - Arquitectura técnica
+4. `docs/ai/04_MEMORY.md` - Estado actual
+
+Luego consultar archivo específico según tipo de cambio:
+- Cambios en Docker → `.cursor/rules/docker.md`
+- Scripts Shell → `.cursor/rules/shell.md`
+- Commits/PRs → `.cursor/rules/git.md`
+
+## ⚠️ Regla Más Importante
+
+**Este proyecto es SOLO el template Docker de Minecraft.**
+
+NO incluye:
+- ❌ API REST (va en proyecto separado)
+- ❌ Base de datos
+- ❌ Dashboard web
+- ❌ Sistema de autenticación
+
+Si tu cambio no es sobre Docker/configuración de Minecraft, **NO va aquí.**
+
+## 📋 Antes de Proponer Cambios
+
+Checklist obligatorio:
+
+- [ ] Leí `.cursor/rules/core.md`
+- [ ] Leí `docs/ai/01_CONTEXT.md`
+- [ ] Verificé que el cambio pertenece a ESTE proyecto
+- [ ] Simulé: `hadolint Dockerfile && shellcheck scripts/*.sh`
+- [ ] Preparé actualización para `docs/ai/04_MEMORY.md`
+- [ ] Preparé entrada para `docs/ai/09_CHANGELOG.md`
+
+## 🔍 Más Información
+
+- **Documentación completa:** `docs/ai/`
+- **Guía rápida:** `docs/ai/08_QUICK_START.md`
+- **README:** Ver archivo raíz
+
+---
+
+**Versión:** 1.0.0  
+**Última actualización:** 2025-10-24

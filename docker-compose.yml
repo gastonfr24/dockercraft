@@ -1,0 +1,113 @@
+# DockerCraft - Docker Compose Configuration (Standalone Server)
+# This is an example configuration for running a single Minecraft server
+# Copy .env.example to .env and customize your configuration
+
+services:
+  minecraft:
+    build: .
+    container_name: mc-server-1
+    hostname: mc-server-1
+    
+    # Port mapping
+    # Format: "host_port:container_port"
+    # Change host port if running multiple servers
+    ports:
+      - "25565:25565"  # Minecraft server port
+      - "25575:25575"  # RCON port (optional, for remote admin)
+    
+    # Environment variables
+    # See .env.example for all available options
+    environment:
+      # Core configuration
+      EULA: "${EULA:-TRUE}"
+      VERSION: "${VERSION:-1.21.1}"
+      TYPE: "${TYPE:-PAPER}"
+      
+      # Memory allocation
+      MEMORY: "${MEMORY:-4G}"
+      
+      # Player settings
+      MAX_PLAYERS: "${MAX_PLAYERS:-20}"
+      
+      # World configuration
+      LEVEL_NAME: "${LEVEL_NAME:-world}"
+      DIFFICULTY: "${DIFFICULTY:-normal}"
+      GAMEMODE: "${GAMEMODE:-survival}"
+      PVP: "${PVP:-true}"
+      
+      # Performance settings
+      VIEW_DISTANCE: "${VIEW_DISTANCE:-10}"
+      SIMULATION_DISTANCE: "${SIMULATION_DISTANCE:-10}"
+      USE_AIKAR_FLAGS: "${USE_AIKAR_FLAGS:-true}"
+      
+      # Auto-pause configuration
+      ENABLE_AUTOPAUSE: "${ENABLE_AUTOPAUSE:-TRUE}"
+      AUTOPAUSE_TIMEOUT_EST: "${AUTOPAUSE_TIMEOUT_EST:-300}"
+      AUTOPAUSE_TIMEOUT_KN: "${AUTOPAUSE_TIMEOUT_KN:-120}"
+      
+      # RCON configuration
+      ENABLE_RCON: "${ENABLE_RCON:-true}"
+      RCON_PORT: "${RCON_PORT:-25575}"
+      RCON_PASSWORD: "${RCON_PASSWORD:-minecraft}"
+      
+      # Server identity
+      MOTD: "${MOTD:-A Minecraft Server powered by DockerCraft}"
+      
+      # Logging
+      LOG_TIMESTAMP: "${LOG_TIMESTAMP:-true}"
+      TZ: "${TZ:-America/New_York}"
+    
+    # Load environment variables from .env file
+    env_file:
+      - .env
+    
+    # Volume for persistent data
+    # All world data, configurations, plugins stored here
+    volumes:
+      - mc-server-1-data:/data
+    
+    # Networking
+    networks:
+      - minecraft-net
+    
+    # Restart policy
+    # unless-stopped: restart on crash, but not if manually stopped
+    restart: unless-stopped
+    
+    # Resource limits
+    # Adjust according to your server capacity
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 5G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    
+    # stdin and tty for console access
+    # Use: docker attach mc-server-1
+    stdin_open: true
+    tty: true
+    
+    # Health check
+    # Container will be marked unhealthy if server is not responding
+    healthcheck:
+      test: ["CMD", "mc-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+# Named volumes for data persistence
+volumes:
+  mc-server-1-data:
+    name: mc-server-1-data
+    driver: local
+
+# Networks
+networks:
+  minecraft-net:
+    name: minecraft-network
+    driver: bridge
+

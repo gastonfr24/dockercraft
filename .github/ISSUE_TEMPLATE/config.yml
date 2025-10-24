@@ -1,0 +1,9 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/gastonfr24/dockercraft/blob/main/README.md
+    about: Read the project documentation
+  - name: Quick Start Guide
+    url: https://github.com/gastonfr24/dockercraft/blob/main/docs/ai/08_QUICK_START.md
+    about: Get started quickly with DockerCraft
+

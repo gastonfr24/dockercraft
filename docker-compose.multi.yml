@@ -1,0 +1,135 @@
+# DockerCraft - Multiple Servers Example
+# Example configuration for running multiple Minecraft servers simultaneously
+# Each server runs on a different port with independent configuration
+
+services:
+  # Server 1: Survival Mode
+  mc-server-survival:
+    build: .
+    container_name: mc-server-survival
+    hostname: survival
+    ports:
+      - "25565:25565"  # Main server port
+      - "25575:25575"  # RCON port
+    environment:
+      EULA: "TRUE"
+      VERSION: "1.21.1"
+      TYPE: "PAPER"
+      MEMORY: "4G"
+      MAX_PLAYERS: "20"
+      LEVEL_NAME: "survival_world"
+      DIFFICULTY: "normal"
+      GAMEMODE: "survival"
+      PVP: "true"
+      MOTD: "Survival Server - DockerCraft"
+      ENABLE_AUTOPAUSE: "TRUE"
+      TZ: "America/New_York"
+    volumes:
+      - mc-survival-data:/data
+    networks:
+      - minecraft-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 5G
+        reservations:
+          memory: 2G
+    stdin_open: true
+    tty: true
+
+  # Server 2: Creative Mode
+  mc-server-creative:
+    build: .
+    container_name: mc-server-creative
+    hostname: creative
+    ports:
+      - "25566:25565"  # Different host port
+      - "25576:25575"  # Different RCON port
+    environment:
+      EULA: "TRUE"
+      VERSION: "1.21.1"
+      TYPE: "PAPER"
+      MEMORY: "3G"
+      MAX_PLAYERS: "15"
+      LEVEL_NAME: "creative_world"
+      DIFFICULTY: "peaceful"
+      GAMEMODE: "creative"
+      PVP: "false"
+      ALLOW_FLIGHT: "true"
+      MOTD: "Creative Server - DockerCraft"
+      ENABLE_AUTOPAUSE: "TRUE"
+      TZ: "America/New_York"
+    volumes:
+      - mc-creative-data:/data
+    networks:
+      - minecraft-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 4G
+        reservations:
+          memory: 1G
+    stdin_open: true
+    tty: true
+
+  # Server 3: Minigames/Testing
+  mc-server-minigames:
+    build: .
+    container_name: mc-server-minigames
+    hostname: minigames
+    ports:
+      - "25567:25565"  # Different host port
+      - "25577:25575"  # Different RCON port
+    environment:
+      EULA: "TRUE"
+      VERSION: "1.21.1"
+      TYPE: "PAPER"
+      MEMORY: "2G"
+      MAX_PLAYERS: "10"
+      LEVEL_NAME: "minigames_world"
+      DIFFICULTY: "easy"
+      GAMEMODE: "adventure"
+      PVP: "true"
+      LEVEL_TYPE: "FLAT"
+      MOTD: "Minigames Server - DockerCraft"
+      ENABLE_AUTOPAUSE: "TRUE"
+      TZ: "America/New_York"
+    volumes:
+      - mc-minigames-data:/data
+    networks:
+      - minecraft-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 3G
+        reservations:
+          memory: 1G
+    stdin_open: true
+    tty: true
+
+# Named volumes for each server
+volumes:
+  mc-survival-data:
+    name: mc-server-survival-data
+    driver: local
+  
+  mc-creative-data:
+    name: mc-server-creative-data
+    driver: local
+  
+  mc-minigames-data:
+    name: mc-server-minigames-data
+    driver: local
+
+# Shared network for all servers
+networks:
+  minecraft-net:
+    name: minecraft-network
+    driver: bridge
+

@@ -1,0 +1,123 @@
+name: Bug Report
+description: Report a bug or issue with DockerCraft
+title: "[BUG] "
+labels: ["bug"]
+assignees:
+  - gastonfr24
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this bug!
+        
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: The server crashes when...
+    validations:
+      required: true
+      
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Run `docker-compose up -d`
+        2. Wait 5 minutes
+        3. Check logs with `docker-compose logs`
+        4. See error
+    validations:
+      required: true
+      
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Server should start normally
+    validations:
+      required: true
+      
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Server crashes with OOM error
+    validations:
+      required: true
+      
+  - type: dropdown
+    id: version
+    attributes:
+      label: DockerCraft Version
+      description: Which version are you using?
+      options:
+        - v0.2.0-alpha (latest)
+        - v0.1.0-alpha
+        - main branch (development)
+        - other (specify in additional context)
+    validations:
+      required: true
+      
+  - type: input
+    id: docker-version
+    attributes:
+      label: Docker Version
+      description: Run `docker --version`
+      placeholder: Docker version 24.0.5
+    validations:
+      required: true
+      
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you running?
+      placeholder: Ubuntu 22.04, Windows 11, macOS 13
+    validations:
+      required: true
+      
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: Relevant .env variables or docker-compose config
+      placeholder: |
+        MEMORY=4G
+        TYPE=PAPER
+        VERSION=1.21.1
+        MAX_PLAYERS=20
+      render: bash
+      
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log output
+      placeholder: Paste logs here
+      render: shell
+      
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots, or information
+      
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I am using the latest version
+          required: false
+        - label: I have included logs and configuration
+          required: true
+

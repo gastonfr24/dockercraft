@@ -1,0 +1,74 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and editors
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+*.swn
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
+docker-compose.override.yml
+
+# Minecraft server data (if running locally outside Docker)
+world/
+world_nether/
+world_the_end/
+plugins/
+mods/
+crash-reports/
+ops.json
+whitelist.json
+banned-players.json
+banned-ips.json
+usercache.json
+
+# Backups
+backups/
+*.tar.gz
+*.zip
+
+# Test artifacts
+test-results/
+coverage/
+
