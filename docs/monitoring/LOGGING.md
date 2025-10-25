@@ -168,13 +168,130 @@ docker logs cloudflared-quick
 
 ---
 
+---
+
+### 3. JSON Structured Logging
+
+**Ubicación:** `docker/scripts/json-logger.sh`
+
+**Características:**
+- 📋 JSON output para integraciones
+- 🔍 Filtrado de datos sensibles automático
+- 🎚️ Niveles de log (DEBUG, INFO, WARN, ERROR, FATAL)
+- 📊 Metadata estructurada (timestamp, component, pid)
+
+**Uso:**
+
+```bash
+# Source el logger
+source /docker/scripts/json-logger.sh
+
+# Logs simples
+log_info "Server started"
+log_error "Failed to connect to database"
+
+# Logs con metadata
+log_info "Player joined" "minecraft" '{"player": "Steve", "ip": "1.2.3.4"}'
+
+# Salida JSON:
+{
+  "timestamp": "2025-10-25T02:10:30.123Z",
+  "level": "INFO",
+  "component": "minecraft",
+  "message": "Player joined",
+  "hostname": "mc-server",
+  "pid": 1234,
+  "extra": {"player": "Steve", "ip": "1.2.3.4"}
+}
+```
+
+**Niveles de Log:**
+```bash
+# Configurar nivel mínimo (default: INFO)
+export LOG_LEVEL=DEBUG  # DEBUG, INFO, WARN, ERROR, FATAL
+```
+
+---
+
+### 4. Sensitive Data Filtering
+
+**Ubicación:** `docker/scripts/log-filter.sh`
+
+**Filtra automáticamente:**
+- 🔐 Passwords, tokens, secrets
+- 🌐 IPs privadas (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
+- 📧 Emails (parcialmente)
+- 🆔 UUIDs (parcialmente - mantiene primeros 8 chars)
+
+**Uso:**
+
+```bash
+# Filtrar logs en tiempo real
+docker logs minecraft-server | ./docker/scripts/log-filter.sh
+
+# Filtrar logs guardados
+cat /data/logs/server.log | ./docker/scripts/log-filter.sh > filtered.log
+```
+
+**Ejemplo:**
+
+```bash
+# Input:
+"password=secret123 token=abc123 IP 192.168.1.5"
+
+# Output:
+"password=***REDACTED*** token=***REDACTED*** IP **PRIVATE_IP**"
+```
+
+---
+
+### 5. Log Rotation
+
+**Ubicación:** `docker/scripts/log-rotate.sh`
+
+**Características:**
+- 🔄 Rotación automática por tamaño
+- 🗜️ Compresión de logs antiguos
+- 🗑️ Limpieza automática de logs viejos
+- ⚙️ Configurable vía environment variables
+
+**Configuración:**
+
+```bash
+# En docker-compose.yml o .env
+LOG_DIR=/data/logs
+MAX_SIZE=100M           # Tamaño máximo antes de rotar
+RETENTION_DAYS=7        # Días a mantener logs antiguos
+COMPRESS=true           # Comprimir logs rotados
+```
+
+**Uso Manual:**
+
+```bash
+# Rotar logs manualmente
+./docker/scripts/log-rotate.sh
+
+# O desde cron (automático)
+0 2 * * * /docker/scripts/log-rotate.sh
+```
+
+**Archivos Generados:**
+```
+/data/logs/
+├── server.log                    # Log actual
+├── server.log.20251025-020000    # Rotado hoy
+├── server.log.20251024-020000.gz # Comprimido ayer
+└── server.log.20251018-020000.gz # Será borrado en 7 días
+```
+
+---
+
 ## 🚀 Próximas Mejoras
 
-- [ ] JSON structured logging (US-37)
-- [ ] Log rotation automático
-- [ ] Filtros de datos sensibles
 - [ ] Dashboard web de logs (US-38 - opcional)
 - [ ] Integración con ELK/Grafana
+- [ ] Alertas automáticas por Slack/Discord
+- [ ] Métricas de performance (Prometheus)
 
 ---
 
