@@ -1,9 +1,9 @@
 # Sprint 6 - Public Deployment & Authorization
 
 **Fecha Inicio:** 2025-10-25  
-**Estado:** Planning  
-**Story Points:** 55  
-**Duración:** 3 semanas
+**Estado:** In Progress  
+**Story Points:** 76  
+**Duración:** 4 semanas
 
 ---
 
@@ -15,10 +15,10 @@ Hacer el servidor de Minecraft accesible desde internet de forma segura, impleme
 
 ## 📊 Métricas
 
-- **Story Points Total:** 55
-- **User Stories:** 5
-- **Tareas Estimadas:** 20+
-- **Duración Estimada:** 3 semanas
+- **Story Points Total:** 76
+- **User Stories:** 8
+- **Tareas Estimadas:** 30+
+- **Duración Estimada:** 4 semanas
 
 ---
 
@@ -159,6 +159,115 @@ Hacer el servidor de Minecraft accesible desde internet de forma segura, impleme
 3. `performance-monitor` - Monitoring de performance
 4. `maintenance-schedule` - Configurar mantenimiento
 5. `player-troubleshooting` - Guía de troubleshooting
+
+---
+
+### US-31: Integración con Cloudflare Tunnel
+
+**Story Points:** 13  
+**Prioridad:** Crítica  
+**Issue:** TBD
+
+**Como** administrador  
+**Quiero** exponer el servidor mediante Cloudflare Tunnel  
+**Para** evitar port forwarding y tener un dominio fijo gratuito
+
+**Acceptance Criteria:**
+- [ ] cloudflared instalado en el sistema
+- [ ] Script automatizado de instalación
+- [ ] Script de setup de tunnel
+- [ ] Script de inicio/detención del tunnel
+- [ ] Configuración persistente
+- [ ] Dominio fijo asignado
+- [ ] Documentación completa del flujo
+- [ ] Testing de conectividad
+
+**Tareas:**
+1. `cloudflared-install` - Script install-cloudflared.ps1
+2. `tunnel-setup` - Script setup-cloudflare-tunnel.ps1
+3. `tunnel-start` - Script start-cloudflare-tunnel.ps1
+4. `tunnel-stop` - Script stop-cloudflare-tunnel.ps1
+5. `cloudflare-docs` - Documentación CLOUDFLARE_TUNNEL.md
+6. `tunnel-testing` - Testing completo de conectividad
+
+---
+
+### US-32: Reorganización de Scripts
+
+**Story Points:** 5  
+**Prioridad:** Alta  
+**Issue:** TBD
+
+**Como** desarrollador  
+**Quiero** scripts organizados en subcarpetas lógicas  
+**Para** facilitar el mantenimiento y navegación del proyecto
+
+**Acceptance Criteria:**
+- [ ] Scripts organizados en subcarpetas por categoría
+- [ ] Scripts obsoletos eliminados
+- [ ] Scripts actualizados con nuevas rutas
+- [ ] README.md actualizado con nueva estructura
+- [ ] Documentación de scripts actualizada
+- [ ] Workflow de GitHub actualizado si es necesario
+
+**Tareas:**
+1. `scripts-audit` - Auditoría de scripts existentes
+2. `scripts-reorganize` - Crear estructura de carpetas
+3. `scripts-cleanup` - Eliminar scripts obsoletos
+4. `scripts-update-paths` - Actualizar rutas en scripts
+5. `scripts-docs-update` - Actualizar documentación
+
+**Nueva Estructura Propuesta:**
+```
+scripts/
+├── deployment/       # Scripts de deployment
+├── security/         # Scripts de seguridad
+├── monitoring/       # Scripts de monitoreo
+├── backup/          # Scripts de backup
+├── whitelist/       # Scripts de whitelist
+├── tunnel/          # Scripts de Cloudflare Tunnel
+└── utils/           # Scripts de utilidades
+```
+
+---
+
+### US-33: Reorganización de Documentación
+
+**Story Points:** 5  
+**Prioridad:** Alta  
+**Issue:** TBD
+
+**Como** desarrollador  
+**Quiero** documentación organizada por categorías  
+**Para** encontrar información fácilmente
+
+**Acceptance Criteria:**
+- [ ] Docs organizados en subcarpetas lógicas
+- [ ] Docs obsoletos eliminados
+- [ ] Links actualizados en todos los archivos
+- [ ] README.md actualizado con nueva estructura
+- [ ] Índice de documentación creado
+- [ ] Table of contents en docs principales
+
+**Tareas:**
+1. `docs-audit` - Auditoría de documentación existente
+2. `docs-reorganize` - Crear estructura de carpetas
+3. `docs-cleanup` - Eliminar docs obsoletos
+4. `docs-update-links` - Actualizar links internos
+5. `docs-index` - Crear índice de documentación
+
+**Nueva Estructura Propuesta:**
+```
+docs/
+├── setup/           # Guías de instalación y setup
+├── deployment/      # Guías de deployment
+├── security/        # Guías de seguridad
+├── monitoring/      # Guías de monitoreo
+├── troubleshooting/ # Guías de troubleshooting
+├── development/     # Guías para desarrolladores
+├── sprints/         # Planificación de sprints
+└── ai/             # Documentación para IA
+```
 
 ---
 
