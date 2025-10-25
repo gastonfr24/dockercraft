@@ -1,0 +1,45 @@
+#!/bin/bash
+# DockerCraft - iptables Rules
+# Usage: sudo bash iptables.rules
+
+echo "Configuring iptables for DockerCraft..."
+
+# Flush existing rules
+iptables -F
+iptables -X
+iptables -Z
+
+# Default policies
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+
+# Allow loopback
+iptables -A INPUT -i lo -j ACCEPT
+
+# Allow established connections
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Allow SSH
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Allow Minecraft
+iptables -A INPUT -p tcp --dport 25565 -j ACCEPT
+
+# Allow RCON (restricted to local network)
+iptables -A INPUT -p tcp -s 192.168.1.0/24 --dport 25575 -j ACCEPT
+
+# Drop invalid packets
+iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+
+# Log dropped packets (optional)
+# iptables -A INPUT -j LOG --log-prefix "iptables-dropped: "
+
+# Save rules
+if command -v iptables-save &> /dev/null; then
+    iptables-save > /etc/iptables/rules.v4 || true
+    netfilter-persistent save || true
+fi
+
+echo "iptables configured successfully!"
+

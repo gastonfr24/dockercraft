@@ -1,0 +1,27 @@
+#!/bin/bash
+# DockerCraft - firewalld Rules (CentOS/RHEL/Fedora)
+# Usage: sudo bash firewalld.rules
+
+echo "Configuring firewalld for DockerCraft..."
+
+# Minecraft port
+firewall-cmd --permanent --add-port=25565/tcp --zone=public
+firewall-cmd --permanent --add-service=minecraft --zone=public || true
+
+# RCON (restricted to local network)
+firewall-cmd --permanent --add-rich-rule='
+  rule family="ipv4"
+  source address="192.168.1.0/24"
+  port port="25575" protocol="tcp" accept'
+
+# Optional: Web panel
+# firewall-cmd --permanent --add-port=8080/tcp --zone=public
+
+# Reload firewall
+firewall-cmd --reload
+
+# Show status
+firewall-cmd --list-all
+
+echo "firewalld configured successfully!"
+
