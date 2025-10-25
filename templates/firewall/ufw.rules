@@ -1,0 +1,37 @@
+#!/bin/bash
+# DockerCraft - UFW Firewall Rules (Ubuntu/Debian)
+# Usage: sudo bash ufw.rules
+
+echo "Configuring UFW firewall for DockerCraft..."
+
+# Reset UFW to default
+ufw --force reset
+
+# Default policies
+ufw default deny incoming
+ufw default allow outgoing
+
+# SSH (adjust port if needed)
+ufw allow 22/tcp comment "SSH"
+
+# Minecraft game port
+ufw allow 25565/tcp comment "Minecraft"
+
+# RCON (restrict to local network)
+# Adjust subnet to match your network
+ufw allow from 192.168.1.0/24 to any port 25575 proto tcp comment "RCON (local only)"
+
+# Optional: Allow from specific management IPs
+# ufw allow from YOUR_ADMIN_IP to any port 25575 proto tcp comment "RCON Admin"
+
+# Optional: Web panel (if using)
+# ufw allow 8080/tcp comment "Web Panel"
+
+# Enable firewall
+ufw --force enable
+
+# Show status
+ufw status verbose
+
+echo "UFW firewall configured successfully!"
+
