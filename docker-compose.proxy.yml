@@ -1,0 +1,173 @@
+# ============================================
+# DockerCraft - Multi-Server with Proxy
+# ============================================
+# BungeeCord/Velocity proxy setup for multiple servers
+# Usage: docker-compose -f docker-compose.proxy.yml up -d
+
+version: '3.8'
+
+services:
+  # ============================================
+  # Velocity Proxy (Recommended)
+  # ============================================
+  proxy:
+    image: itzg/bungeecord:java17
+    container_name: mc-proxy
+    ports:
+      - "25565:25577"  # Main connection port
+    environment:
+      TYPE: "VELOCITY"
+      MEMORY: "512M"
+      # Velocity configuration
+      VELOCITY_VERSION: "LATEST"
+      # Server list configuration
+      VELOCITY_SECRET: "CHANGE_THIS_SECRET_KEY"
+      # Forwarding mode
+      PLAYER_INFO_FORWARDING_MODE: "modern"
+    volumes:
+      - proxy-data:/server
+    networks:
+      - minecraft-network
+    restart: unless-stopped
+
+  # ============================================
+  # Hub/Lobby Server
+  # ============================================
+  hub:
+    build: .
+    container_name: mc-hub
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "2G"
+      SERVER_NAME: "Hub Server"
+      # Proxy mode configuration
+      PROXY_MODE: "VELOCITY"
+      VELOCITY_SECRET: "CHANGE_THIS_SECRET_KEY"
+      # Server configuration
+      ONLINE_MODE: "FALSE"
+      MODE: "adventure"
+      SPAWN_PROTECTION: "0"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      # No monsters in hub
+      SPAWN_MONSTERS: "false"
+    volumes:
+      - hub-data:/data
+    networks:
+      - minecraft-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Survival Server
+  # ============================================
+  survival:
+    build: .
+    container_name: mc-survival
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Survival Server"
+      # Proxy mode
+      PROXY_MODE: "VELOCITY"
+      VELOCITY_SECRET: "CHANGE_THIS_SECRET_KEY"
+      ONLINE_MODE: "FALSE"
+      # Survival settings
+      MODE: "survival"
+      DIFFICULTY: "normal"
+      PVP: "true"
+      VIEW_DISTANCE: "10"
+      SIMULATION_DISTANCE: "8"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+      USE_AIKAR_FLAGS: "true"
+    volumes:
+      - survival-data:/data
+    networks:
+      - minecraft-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Creative Server
+  # ============================================
+  creative:
+    build: .
+    container_name: mc-creative
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "3G"
+      SERVER_NAME: "Creative Server"
+      # Proxy mode
+      PROXY_MODE: "VELOCITY"
+      VELOCITY_SECRET: "CHANGE_THIS_SECRET_KEY"
+      ONLINE_MODE: "FALSE"
+      # Creative settings
+      MODE: "creative"
+      DIFFICULTY: "peaceful"
+      PVP: "false"
+      SPAWN_MONSTERS: "false"
+      SPAWN_ANIMALS: "false"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - creative-data:/data
+    networks:
+      - minecraft-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minigames Server
+  # ============================================
+  minigames:
+    build: .
+    container_name: mc-minigames
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "3G"
+      SERVER_NAME: "Minigames Server"
+      # Proxy mode
+      PROXY_MODE: "VELOCITY"
+      VELOCITY_SECRET: "CHANGE_THIS_SECRET_KEY"
+      ONLINE_MODE: "FALSE"
+      # Minigames settings
+      MODE: "adventure"
+      DIFFICULTY: "normal"
+      PVP: "true"
+      VIEW_DISTANCE: "8"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - minigames-data:/data
+    networks:
+      - minecraft-network
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+volumes:
+  proxy-data:
+  hub-data:
+  survival-data:
+  creative-data:
+  minigames-data:
+
+networks:
+  minecraft-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+

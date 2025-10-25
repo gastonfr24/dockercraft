@@ -1,0 +1,167 @@
+name: Enforce Workflow Rules
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches:
+      - main
+      - dev
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Validate PR to Main
+        if: github.base_ref == 'main'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const errors = [];
+            const warnings = [];
+            
+            // REGLA 1: Solo dev o release/* pueden hacer PR a main
+            const allowedSources = ['dev', 'release/'];
+            const headBranch = pr.head.ref;
+            
+            const isAllowed = headBranch === 'dev' || headBranch.startsWith('release/');
+            
+            if (!isAllowed) {
+              errors.push(`❌ **PROHIBIDO:** Solo \`dev\` o \`release/*\` pueden hacer PR a \`main\``);
+              errors.push(`   Tu branch: \`${headBranch}\``);
+              errors.push(`   Branches permitidos: \`dev\`, \`release/*\``);
+            }
+            
+            // REGLA 2: Debe tener Issue vinculado
+            const body = pr.body || '';
+            const hasClosingKeyword = /(?:closes|fixes|resolves)\s+#\d+/i.test(body);
+            
+            if (!hasClosingKeyword) {
+              errors.push(`❌ **REQUERIDO:** El PR debe tener \`Closes #X\` vinculando a un Issue`);
+            }
+            
+            // REGLA 3: Debe tener label de sprint
+            const hasSprintLabel = pr.labels.some(l => l.name.startsWith('sprint-'));
+            if (!hasSprintLabel) {
+              warnings.push(`⚠️ **RECOMENDADO:** El PR debería tener un label \`sprint-X\``);
+            }
+            
+            // REGLA 4: Título debe seguir conventional commits
+            const conventionalPattern = /^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?:/;
+            if (!conventionalPattern.test(pr.title)) {
+              warnings.push(`⚠️ **RECOMENDADO:** El título debería seguir Conventional Commits`);
+              warnings.push(`   Formato: \`type(scope): description\``);
+              warnings.push(`   Ejemplo: \`feat(api): add user authentication\``);
+            }
+            
+            // REGLA 5: Recordatorio de aprobación
+            let approvalNote = `\n---\n\n`;
+            approvalNote += `### 👤 Aprobación Requerida\n\n`;
+            approvalNote += `Este PR a \`main\` **REQUIERE APROBACIÓN MANUAL** del owner (@gastonfr24).\n\n`;
+            approvalNote += `**NO se puede hacer auto-merge.**\n\n`;
+            approvalNote += `El owner debe:\n`;
+            approvalNote += `1. Revisar todos los cambios\n`;
+            approvalNote += `2. Verificar CI/CD passing\n`;
+            approvalNote += `3. Aprobar manualmente\n`;
+            approvalNote += `4. Mergear cuando esté listo\n`;
+            
+            comment += approvalNote;
+            
+            // Crear comentario con resultados
+            let comment = `## 🔍 Validación de Workflow\n\n`;
+            
+            if (errors.length > 0) {
+              comment += `### ❌ Errores (BLOQUEAN MERGE)\n\n`;
+              errors.forEach(e => comment += `${e}\n`);
+              comment += `\n`;
+            }
+            
+            if (warnings.length > 0) {
+              comment += `### ⚠️ Advertencias\n\n`;
+              warnings.forEach(w => comment += `${w}\n`);
+              comment += `\n`;
+            }
+            
+            if (errors.length === 0 && warnings.length === 0) {
+              comment += `### ✅ Todas las Validaciones Pasaron\n\n`;
+              comment += `Este PR cumple con todos los requisitos del workflow.\n`;
+            }
+            
+            comment += `\n---\n\n`;
+            comment += `📚 **Documentación:** Ver \`.cursor/rules/workflow.md\`\n`;
+            
+            // Comentar en el PR
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: comment
+            });
+            
+            // Si hay errores, fallar el check
+            if (errors.length > 0) {
+              core.setFailed(`❌ Workflow validation failed with ${errors.length} error(s)`);
+            }
+
+      - name: Validate PR to Dev
+        if: github.base_ref == 'dev'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const errors = [];
+            const warnings = [];
+            const headBranch = pr.head.ref;
+            
+            // REGLA 1: Solo task/*, feature/*, bugfix/*, hotfix/*, o sprint/* pueden hacer PR a dev
+            const allowedPrefixes = ['task/', 'feature/', 'bugfix/', 'hotfix/', 'sprint/'];
+            const isAllowed = allowedPrefixes.some(prefix => headBranch.startsWith(prefix));
+            
+            if (!isAllowed) {
+              errors.push(`❌ **PROHIBIDO:** Solo branches con prefijos permitidos pueden hacer PR a \`dev\``);
+              errors.push(`   Tu branch: \`${headBranch}\``);
+              errors.push(`   Prefijos permitidos: ${allowedPrefixes.join(', ')}`);
+            }
+            
+            // REGLA 2: Debe tener Issue vinculado (menos estricto para sprint/*)
+            const body = pr.body || '';
+            const hasClosingKeyword = /(?:closes|fixes|resolves)\s+#\d+/i.test(body);
+            
+            if (!hasClosingKeyword && !headBranch.startsWith('sprint/')) {
+              warnings.push(`⚠️ **RECOMENDADO:** El PR debería tener \`Closes #X\` vinculando a un Issue`);
+              warnings.push(`   Esto vinculará el Issue en la sección "Development" del PR`);
+            }
+            
+            // Crear comentario
+            let comment = `## 🔍 Validación de Workflow (dev)\n\n`;
+            
+            if (errors.length > 0) {
+              comment += `### ❌ Errores\n\n`;
+              errors.forEach(e => comment += `${e}\n`);
+              comment += `\n`;
+            }
+            
+            if (warnings.length > 0) {
+              comment += `### ⚠️ Advertencias\n\n`;
+              warnings.forEach(w => comment += `${w}\n`);
+              comment += `\n`;
+            }
+            
+            if (errors.length === 0 && warnings.length === 0) {
+              comment += `### ✅ Todas las Validaciones Pasaron\n\n`;
+              comment += `Este PR puede ser auto-mergeado por cualquier desarrollador.\n`;
+              comment += `**No requiere aprobación manual.**\n`;
+            }
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: comment
+            });
+            
+            if (errors.length > 0) {
+              core.setFailed(`❌ Workflow validation failed`);
+            }
+

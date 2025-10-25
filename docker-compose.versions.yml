@@ -1,0 +1,232 @@
+# ============================================
+# DockerCraft - Multi-Version Examples
+# ============================================
+# Examples of different Minecraft versions and server types
+# Usage: docker-compose -f docker-compose.versions.yml up <service-name>
+
+version: '3.8'
+
+services:
+  # ============================================
+  # Latest Paper (Recommended)
+  # ============================================
+  latest-paper:
+    build: .
+    container_name: mc-latest-paper
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Latest Paper Server"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - latest-paper-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minecraft 1.20.4 Paper
+  # ============================================
+  paper-1-20-4:
+    build: .
+    container_name: mc-paper-1-20-4
+    ports:
+      - "25566:25565"
+      - "25576:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.20.4"
+      MEMORY: "4G"
+      SERVER_NAME: "Paper 1.20.4"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - paper-1-20-4-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minecraft 1.19.4 Spigot
+  # ============================================
+  spigot-1-19-4:
+    build: .
+    container_name: mc-spigot-1-19-4
+    ports:
+      - "25567:25565"
+      - "25577:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "SPIGOT"
+      VERSION: "1.19.4"
+      MEMORY: "3G"
+      SERVER_NAME: "Spigot 1.19.4"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - spigot-1-19-4-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minecraft 1.20.1 Fabric
+  # ============================================
+  fabric-1-20-1:
+    build: .
+    container_name: mc-fabric-1-20-1
+    ports:
+      - "25568:25565"
+      - "25578:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FABRIC"
+      VERSION: "1.20.1"
+      MEMORY: "6G"
+      SERVER_NAME: "Fabric 1.20.1"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - fabric-1-20-1-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minecraft 1.20.1 Forge
+  # ============================================
+  forge-1-20-1:
+    build: .
+    container_name: mc-forge-1-20-1
+    ports:
+      - "25569:25565"
+      - "25579:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.20.1"
+      MEMORY: "8G"
+      SERVER_NAME: "Forge 1.20.1"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - forge-1-20-1-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Minecraft 1.18.2 Paper (Long Term Support)
+  # ============================================
+  paper-1-18-2-lts:
+    build: .
+    container_name: mc-paper-1-18-2-lts
+    ports:
+      - "25570:25565"
+      - "25580:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "1.18.2"
+      MEMORY: "4G"
+      SERVER_NAME: "Paper 1.18.2 LTS"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - paper-1-18-2-lts-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Vanilla Latest (Official Server)
+  # ============================================
+  vanilla-latest:
+    build: .
+    container_name: mc-vanilla-latest
+    ports:
+      - "25571:25565"
+      - "25581:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "VANILLA"
+      VERSION: "LATEST"
+      MEMORY: "2G"
+      SERVER_NAME: "Vanilla Latest"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - vanilla-latest-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Purpur Latest (High Performance)
+  # ============================================
+  purpur-latest:
+    build: .
+    container_name: mc-purpur-latest
+    ports:
+      - "25572:25565"
+      - "25582:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PURPUR"
+      VERSION: "LATEST"
+      MEMORY: "4G"
+      SERVER_NAME: "Purpur Latest"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - purpur-latest-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ============================================
+  # Snapshot (Latest Development Version)
+  # ============================================
+  snapshot:
+    build: .
+    container_name: mc-snapshot
+    ports:
+      - "25573:25565"
+      - "25583:25575"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      VERSION: "SNAPSHOT"
+      MEMORY: "4G"
+      SERVER_NAME: "Latest Snapshot"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "minecraft"
+    volumes:
+      - snapshot-data:/data
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+volumes:
+  latest-paper-data:
+  paper-1-20-4-data:
+  spigot-1-19-4-data:
+  fabric-1-20-1-data:
+  forge-1-20-1-data:
+  paper-1-18-2-lts-data:
+  vanilla-latest-data:
+  purpur-latest-data:
+  snapshot-data:
+
+networks:
+  default:
+    name: minecraft-versions
+    driver: bridge
+

@@ -3,8 +3,10 @@
 > Plantilla Docker optimizada para servidores de Minecraft que pueden ser instanciados bajo demanda
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.21.1-62B47A?logo=minecraft&logoColor=white)](https://www.minecraft.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-All%20Versions-62B47A?logo=minecraft&logoColor=white)](https://www.minecraft.net/)
 [![Paper](https://img.shields.io/badge/Paper-Optimized-00897B)](https://papermc.io/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-v0.4.0-blue.svg)](https://github.com/gastonfr24/dockercraft/releases)
 
 ---
 
@@ -29,11 +31,15 @@ Este proyecto NO incluye:
 
 - 🐳 **Containerizado con Docker** - Aislamiento y portabilidad
 - ⚙️ **Altamente Configurable** - Variables de entorno para todo
-- 📦 **Basado en itzg/minecraft-server** - Imagen madura y mantenida
-- 🚀 **Optimizado** - Paper server con JVM flags optimizados
+- 📦 **Multi-Version** - Soporta todas las versiones de Minecraft
+- 🎮 **Multi-Type** - Paper, Spigot, Forge, Fabric, Vanilla, Purpur
+- 🧩 **Modpacks** - CurseForge, FTB, Modrinth support
+- 🌐 **Multi-Server** - Proxy (Velocity/BungeeCord) ready
+- 🚀 **Optimizado** - JVM flags y performance tuning
 - 💾 **Persistente** - Volúmenes Docker para datos
 - 🔄 **Auto-Pause** - Ahorra recursos cuando no hay jugadores
 - 🏥 **Health Checks** - Monitoreo automático de estado
+- 🔌 **Plugins/Mods** - Instalación automática
 - 📖 **Bien Documentado** - Guías completas y ejemplos
 
 ---

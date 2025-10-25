@@ -1,0 +1,120 @@
+name: Auto-Create Issue from Branch
+
+on:
+  create:
+    branches:
+      - 'task/**'
+      - 'feature/**'
+
+jobs:
+  create-issue:
+    runs-on: ubuntu-latest
+    if: github.event.ref_type == 'branch'
+    
+    steps:
+      - name: Extract Branch Info
+        id: branch-info
+        run: |
+          BRANCH_NAME="${{ github.event.ref }}"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          # Extract task info from branch name
+          # Format: task/us14-dockerfile-versions or feature/multi-version-support
+          if [[ $BRANCH_NAME == task/* ]]; then
+            TASK_NAME=$(echo $BRANCH_NAME | sed 's/task\///')
+            PREFIX="Task"
+          else
+            TASK_NAME=$(echo $BRANCH_NAME | sed 's/feature\///')
+            PREFIX="Feature"
+          fi
+          
+          # Convert kebab-case to Title Case
+          TITLE=$(echo $TASK_NAME | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
+          
+          echo "task_name=$TASK_NAME" >> $GITHUB_OUTPUT
+          echo "title=[$PREFIX] $TITLE" >> $GITHUB_OUTPUT
+          echo "prefix=$PREFIX" >> $GITHUB_OUTPUT
+
+      - name: Create Issue
+        id: create-issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = '${{ steps.branch-info.outputs.branch_name }}';
+            const taskName = '${{ steps.branch-info.outputs.task_name }}';
+            const title = '${{ steps.branch-info.outputs.title }}';
+            const prefix = '${{ steps.branch-info.outputs.prefix }}';
+            
+            // Determine labels based on branch prefix
+            let labels = ['auto-created'];
+            if (branchName.includes('us14')) labels.push('us-14', 'sprint-3');
+            if (branchName.includes('us15')) labels.push('us-15', 'sprint-3');
+            if (branchName.includes('us16')) labels.push('us-16', 'sprint-3');
+            if (branchName.includes('us17')) labels.push('us-17', 'sprint-3');
+            if (branchName.includes('us18')) labels.push('us-18', 'sprint-3');
+            if (branchName.startsWith('task/')) labels.push('task');
+            if (branchName.startsWith('feature/')) labels.push('feature');
+            
+            // Create issue
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: `## ${prefix} Branch
+            
+            **Branch:** \`${branchName}\`
+            **Created by:** @${context.actor}
+            **Created at:** ${new Date().toISOString()}
+            
+            ---
+            
+            ### Description
+            
+            <!-- Add task description here -->
+            
+            ### Acceptance Criteria
+            
+            - [ ] Code implemented
+            - [ ] Tests passing (if applicable)
+            - [ ] Documentation updated (if applicable)
+            - [ ] PR created and linked to this issue
+            
+            ### Related
+            
+            <!-- Link to User Story or other related issues -->
+            
+            ---
+            
+            **Note:** This issue was auto-created from branch creation.
+            Close this issue by creating a PR with: \`Closes #[issue-number]\``,
+              labels: labels,
+              assignees: ['gastonfr24']
+            });
+            
+            console.log(`✅ Created Issue #${issue.data.number}: ${title}`);
+            core.setOutput('issue_number', issue.data.number);
+            core.setOutput('issue_url', issue.data.html_url);
+            return issue.data.number;
+
+      - name: Comment on Branch Creation
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = '${{ steps.create-issue.outputs.result }}';
+            const issueUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/issues/${issueNumber}`;
+            
+            console.log(`
+            ╔════════════════════════════════════════════════════════════╗
+            ║  ISSUE AUTO-CREATED                                         ║
+            ╚════════════════════════════════════════════════════════════╝
+            
+            📝 Issue #${issueNumber} created automatically
+            🔗 ${issueUrl}
+            🌿 Branch: ${{ steps.branch-info.outputs.branch_name }}
+            
+            Next steps:
+            1. Update issue description with details
+            2. Implement the task
+            3. Create PR with: "Closes #${issueNumber}"
+            `);
+
