@@ -47,11 +47,43 @@ jobs:
             
             // Determine labels based on branch prefix
             let labels = ['auto-created'];
+            
+            // Sprint 3
             if (branchName.includes('us14')) labels.push('us-14', 'sprint-3');
             if (branchName.includes('us15')) labels.push('us-15', 'sprint-3');
             if (branchName.includes('us16')) labels.push('us-16', 'sprint-3');
             if (branchName.includes('us17')) labels.push('us-17', 'sprint-3');
             if (branchName.includes('us18')) labels.push('us-18', 'sprint-3');
+            
+            // Sprint 4
+            if (branchName.includes('us19')) labels.push('us-19', 'sprint-4');
+            if (branchName.includes('us20')) labels.push('us-20', 'sprint-4');
+            if (branchName.includes('us21')) labels.push('us-21', 'sprint-4');
+            if (branchName.includes('us22')) labels.push('us-22', 'sprint-4');
+            
+            // Sprint 5
+            if (branchName.includes('us23')) labels.push('us-23', 'sprint-5');
+            if (branchName.includes('us24')) labels.push('us-24', 'sprint-5');
+            if (branchName.includes('us25')) labels.push('us-25', 'sprint-5');
+            
+            // Sprint 6
+            if (branchName.includes('us26')) labels.push('us-26', 'sprint-6');
+            if (branchName.includes('us27')) labels.push('us-27', 'sprint-6');
+            if (branchName.includes('us28')) labels.push('us-28', 'sprint-6');
+            if (branchName.includes('us29')) labels.push('us-29', 'sprint-6');
+            if (branchName.includes('us30')) labels.push('us-30', 'sprint-6');
+            if (branchName.includes('us31')) labels.push('us-31', 'sprint-6');
+            if (branchName.includes('us32')) labels.push('us-32', 'sprint-6');
+            if (branchName.includes('us33')) labels.push('us-33', 'sprint-6');
+            if (branchName.includes('us34')) labels.push('us-34', 'sprint-6');
+            
+            // Sprint 7
+            if (branchName.includes('us35')) labels.push('us-35', 'sprint-7', 'enhancement');
+            if (branchName.includes('us36')) labels.push('us-36', 'sprint-7', 'enhancement');
+            if (branchName.includes('us37')) labels.push('us-37', 'sprint-7', 'enhancement');
+            if (branchName.includes('us38')) labels.push('us-38', 'sprint-7', 'enhancement', 'optional');
+            
+            // General
             if (branchName.startsWith('task/')) labels.push('task');
             if (branchName.startsWith('feature/')) labels.push('feature');
             
