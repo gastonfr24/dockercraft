@@ -1,0 +1,77 @@
+# DockerCraft - Development Docker Compose
+# Optimized for local development with hot-reload and debugging
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  minecraft-dev:
+    image: itzg/minecraft-server:java21
+    container_name: dockercraft-dev
+    restart: unless-stopped
+    
+    environment:
+      EULA: "TRUE"
+      TYPE: ${SERVER_TYPE:-PAPER}
+      VERSION: ${MINECRAFT_VERSION:-LATEST}
+      MEMORY: ${MEMORY:-2G}
+      
+      # Development settings
+      ONLINE_MODE: "FALSE"
+      ENABLE_AUTOPAUSE: "FALSE"
+      VIEW_DISTANCE: 6
+      SIMULATION_DISTANCE: 4
+      
+      # Debug mode
+      DEBUG: "TRUE"
+      DEBUG_PORT: 5005
+      
+      # RCON
+      ENABLE_RCON: "TRUE"
+      RCON_PASSWORD: "dev_password_123"
+      RCON_PORT: 25575
+      
+      # Logging
+      LOG_LEVEL: DEBUG
+      ENABLE_ROLLING_LOGS: "FALSE"
+      
+    ports:
+      - "${MINECRAFT_PORT:-25565}:25565"
+      - "${RCON_PORT:-25575}:25575"
+      - "5005:5005"  # Java debug port
+    
+    volumes:
+      # Named volume for data (faster on Mac/Windows)
+      - minecraft_data_dev:/data
+      
+      # Mount local directories for hot-reload
+      - ./config:/config:ro
+      - ./plugins:/plugins
+      - ./mods:/mods
+      
+    stdin_open: true
+    tty: true
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+    
+    healthcheck:
+      test: mc-health
+      start_period: 2m
+      interval: 30s
+      retries: 3
+      timeout: 10s
+
+volumes:
+  minecraft_data_dev:
+    driver: local
+
+networks:
+  default:
+    name: dockercraft-dev
+
