@@ -9,10 +9,11 @@
 ## 📋 Tabla de Contenidos
 
 - [¿Qué es Cloudflare Tunnel?](#qué-es-cloudflare-tunnel)
+- [Dos Formas de Usar Cloudflare Tunnel](#dos-formas-de-usar-cloudflare-tunnel)
+- [Quick Tunnel (Sin Cuenta)](#quick-tunnel-sin-cuenta)
+- [Tunnel Persistente (Con Cuenta)](#tunnel-persistente-con-cuenta)
 - [Ventajas vs Port Forwarding](#ventajas-vs-port-forwarding)
-- [Requisitos](#requisitos)
 - [Instalación](#instalación)
-- [Configuración](#configuración)
 - [Uso Diario](#uso-diario)
 - [Troubleshooting](#troubleshooting)
 - [FAQ](#faq)
@@ -21,55 +22,151 @@
 
 ## 🌐 ¿Qué es Cloudflare Tunnel?
 
-Cloudflare Tunnel (anteriormente Argo Tunnel) es un servicio **gratuito** que permite exponer tu servidor de Minecraft a internet sin necesidad de:
+Cloudflare Tunnel (anteriormente Argo Tunnel) es un servicio **100% GRATUITO** que permite exponer tu servidor de Minecraft a internet sin necesidad de:
 
 - ❌ Configurar port forwarding en tu router
 - ❌ Exponer tu IP pública directamente
 - ❌ Lidiar con IPs dinámicas
+- ❌ **Comprar o tener un dominio propio**
 
-### ✅ Ventajas
-
-| Característica | Cloudflare Tunnel | Port Forwarding |
-|----------------|-------------------|-----------------|
-| **Gratis** | ✅ | ✅ |
-| **Sin config de router** | ✅ | ❌ |
-| **Dominio fijo** | ✅ | ❌ (requiere DDNS) |
-| **Seguridad** | ✅ Alta | ⚠️ Media |
-| **DDoS Protection** | ✅ | ❌ |
-| **IP oculta** | ✅ | ❌ |
-| **Facilidad** | ✅ Muy fácil | ⚠️ Complejo |
+**✅ Cloudflare te asigna un dominio automáticamente - GRATIS**
 
 ---
 
-## 📦 Requisitos
+## 🎯 Dos Formas de Usar Cloudflare Tunnel
 
-### Mínimos
+Cloudflare ofrece **DOS opciones gratuitas** según tus necesidades:
+
+### 🚀 Opción 1: Quick Tunnel (Recomendado para Empezar)
+
+**Características:**
+- ✅ **100% Gratis**
+- ✅ **Sin necesidad de cuenta**
+- ✅ **Setup en 30 segundos**
+- ✅ **Cloudflare te asigna un dominio automáticamente**
+- ⚠️ El dominio cambia cada vez que reinicias
+
+**Ideal para:**
+- Probar el servidor con amigos
+- Sesiones de juego temporales
+- Testing rápido
+
+**Ejemplo de dominio asignado:**
+```
+random-words-123.trycloudflare.com
+```
+
+---
+
+### 🔒 Opción 2: Tunnel Persistente (Dominio Permanente)
+
+**Características:**
+- ✅ **100% Gratis**
+- ✅ Requiere cuenta gratuita de Cloudflare
+- ✅ **Dominio fijo que NUNCA cambia**
+- ✅ Setup en 5 minutos
+- ✅ Configuración persistente
+
+**Ideal para:**
+- Servidor permanente
+- Compartir con comunidad
+- No cambiar la IP cada vez
+
+**Ejemplo de dominio asignado:**
+```
+abc12345-6789-def0.cfargotunnel.com
+```
+
+---
+
+## ⚡ Quick Tunnel (Sin Cuenta)
+
+### Instalación
+
+```powershell
+# Instalar cloudflared (solo una vez)
+.\scripts\tunnel\install-cloudflared.ps1
+```
+
+### Uso
+
+```powershell
+# Iniciar servidor de Minecraft
+docker compose up -d
+
+# Iniciar Quick Tunnel
+.\scripts\tunnel\quick-tunnel.ps1
+```
+
+**Resultado:**
+
+```
+======================================
+  Cloudflare Quick Tunnel (GRATIS)
+======================================
+
+Características:
+  - Dominio temporal GRATIS
+  - NO necesitas cuenta
+  - NO necesitas dominio propio
+  - Cloudflare te asigna uno automáticamente
+
+Iniciando tunnel...
+----------------------------------------------------
+
+Your quick Tunnel has been created!
+Visit it at: https://amazing-server-123.trycloudflare.com
+----------------------------------------------------
+```
+
+### Conectarse desde Minecraft
+
+1. Abre Minecraft
+2. Multiplayer → Direct Connect
+3. Pega el dominio: `amazing-server-123.trycloudflare.com`
+4. **No agregues puerto** - Cloudflare lo maneja automáticamente
+5. ¡Conecta!
+
+### Detener el Tunnel
+
+Presiona `Ctrl+C` en la ventana del tunnel, o ejecuta:
+
+```powershell
+.\scripts\tunnel\stop-cloudflare-tunnel.ps1
+```
+
+---
+
+## 🔒 Tunnel Persistente (Con Cuenta)
+
+### Requisitos
 
 - ✅ Windows 10/11 (o Linux/macOS)
-- ✅ Cuenta gratuita de Cloudflare
+- ✅ Cuenta gratuita de Cloudflare (sin tarjeta de crédito)
 - ✅ Conexión a internet estable
 - ✅ Servidor de Minecraft corriendo en localhost:25565
 
-### Cuenta de Cloudflare
+**Nota:** NO necesitas tener un dominio propio. Cloudflare te asigna uno automáticamente.
 
-Si no tienes cuenta:
+### Crear Cuenta de Cloudflare (2 minutos)
 
 1. Visita: https://dash.cloudflare.com/sign-up
-2. Registra una cuenta gratis
+2. Registra una cuenta **GRATIS**
 3. Verifica tu email
+4. ¡Listo! No necesitas configurar nada más
 
-**Nota:** NO necesitas tener un dominio propio. Cloudflare te asigna uno automáticamente.
+**Importante:** No te piden tarjeta de crédito ni información de pago.
 
 ---
 
 ## 🚀 Instalación
 
-### Paso 1: Instalar cloudflared
+### Instalar cloudflared (Solo Una Vez)
 
 Ejecuta el script de instalación:
 
 ```powershell
-.\scripts\install-cloudflared.ps1
+.\scripts\tunnel\install-cloudflared.ps1
 ```
 
 Esto hará:
@@ -90,27 +187,28 @@ cloudflared version 2025.10.0 (built 2025-10-14T16:16 UTC)
 
 ---
 
-## ⚙️ Configuración
+## ⚙️ Setup del Tunnel Persistente
 
-### Paso 2: Setup del Tunnel
+### Paso 1: Autenticación
 
 Ejecuta el script de configuración:
 
 ```powershell
-.\scripts\setup-cloudflare-tunnel.ps1
+.\scripts\tunnel\setup-cloudflare-tunnel.ps1
 ```
 
 ### ¿Qué hace este script?
 
 1. **Autenticación:**
    - Abre tu navegador automáticamente
-   - Te pide autorizar la aplicación en Cloudflare
+   - Te pide iniciar sesión en Cloudflare (o crear cuenta gratuita)
+   - Te pide autorizar la aplicación
    - Guarda las credenciales localmente
 
 2. **Creación del Tunnel:**
    - Crea un tunnel con nombre `dockercraft-minecraft`
    - Obtiene un ID único (UUID)
-   - Te asigna un dominio fijo: `<UUID>.cfargotunnel.com`
+   - **Cloudflare te asigna un dominio fijo GRATIS:** `<UUID>.cfargotunnel.com`
 
 3. **Configuración:**
    - Crea el archivo `C:\cloudflared\config.yml`
@@ -126,25 +224,65 @@ Al finalizar, verás:
   ✅ Setup completado!
 ======================================
 
-Tu dominio de Cloudflare:
+Tu dominio de Cloudflare (PERMANENTE Y GRATIS):
    abc123-456-def.cfargotunnel.com
 
 Para iniciar el tunnel:
-   .\scripts\start-cloudflare-tunnel.ps1
+   .\scripts\tunnel\start-cloudflare-tunnel.ps1
 ```
 
-**¡Guarda este dominio!** Es tu dirección permanente para conectarte.
+**¡Guarda este dominio!** Es tu dirección **permanente** para conectarte. Nunca cambia.
 
 ---
 
 ## 🎮 Uso Diario
 
-### Iniciar el Tunnel
+### Opción A: Quick Tunnel (Temporal)
 
-Cada vez que quieras jugar:
+**Para sesiones rápidas:**
 
 ```powershell
-.\scripts\start-cloudflare-tunnel.ps1
+# Iniciar servidor
+docker compose up -d
+
+# Iniciar Quick Tunnel
+.\scripts\tunnel\quick-tunnel.ps1
+```
+
+**Salida esperada:**
+
+```
+======================================
+  Cloudflare Quick Tunnel (GRATIS)
+======================================
+
+Características:
+  - Dominio temporal GRATIS
+  - NO necesitas cuenta
+  - NO necesitas dominio propio
+
+Iniciando tunnel...
+----------------------------------------------------
+
+Your quick Tunnel has been created!
+Visit it at: https://cool-game-789.trycloudflare.com
+----------------------------------------------------
+```
+
+**Copia el dominio y compártelo con tus amigos.**
+
+---
+
+### Opción B: Tunnel Persistente
+
+**Para servidor permanente:**
+
+```powershell
+# Iniciar servidor
+docker compose up -d
+
+# Iniciar tunnel persistente
+.\scripts\tunnel\start-cloudflare-tunnel.ps1
 ```
 
 **Salida esperada:**
@@ -355,19 +493,43 @@ C:\cloudflared\cloudflared.exe tunnel --config C:\cloudflared\config.yml run --l
 
 ### ¿Cloudflare Tunnel es realmente gratis?
 
-Sí, 100% gratis sin límites de tráfico para uso personal.
+**SÍ**, 100% gratis sin límites de tráfico para uso personal. Cloudflare no te cobra nada.
+
+**Opciones gratuitas:**
+1. **Quick Tunnel:** Sin cuenta, dominio temporal
+2. **Tunnel Persistente:** Con cuenta gratuita, dominio fijo
+
+Ambas opciones son completamente gratuitas.
 
 ---
 
 ### ¿Necesito tener un dominio propio?
 
-No. Cloudflare te asigna un subdominio `.cfargotunnel.com` automáticamente.
+**NO.** Cloudflare te asigna un dominio automáticamente y GRATIS.
+
+**Dominios asignados por Cloudflare:**
+- **Quick Tunnel:** `random-words-123.trycloudflare.com`
+- **Tunnel Persistente:** `abc-123-def.cfargotunnel.com`
+
+No necesitas comprar ni tener ningún dominio propio.
 
 ---
 
 ### ¿El dominio cambia cada vez?
 
-No. Una vez creado, el dominio es **permanente** hasta que elimines el tunnel.
+Depende de la opción que uses:
+
+**Quick Tunnel (sin cuenta):**
+- ❌ El dominio **SÍ cambia** cada vez que reinicias
+- Ejemplo: `random-123.trycloudflare.com` → `different-456.trycloudflare.com`
+
+**Tunnel Persistente (con cuenta gratuita):**
+- ✅ El dominio **NO cambia NUNCA**
+- Ejemplo: `abc-123-def.cfargotunnel.com` (permanente)
+
+**Recomendación:** 
+- Para probar rápido: Quick Tunnel
+- Para servidor permanente: Tunnel Persistente
 
 ---
 
@@ -483,10 +645,11 @@ Sí, crear una tarea programada de Windows:
 
 ### Scripts Relacionados
 
-- [`scripts/install-cloudflared.ps1`](../scripts/install-cloudflared.ps1) - Instalación
-- [`scripts/setup-cloudflare-tunnel.ps1`](../scripts/setup-cloudflare-tunnel.ps1) - Configuración
-- [`scripts/start-cloudflare-tunnel.ps1`](../scripts/start-cloudflare-tunnel.ps1) - Iniciar
-- [`scripts/stop-cloudflare-tunnel.ps1`](../scripts/stop-cloudflare-tunnel.ps1) - Detener
+- [`scripts/tunnel/install-cloudflared.ps1`](../../scripts/tunnel/install-cloudflared.ps1) - Instalación
+- [`scripts/tunnel/quick-tunnel.ps1`](../../scripts/tunnel/quick-tunnel.ps1) - **Quick Tunnel (sin cuenta)**
+- [`scripts/tunnel/setup-cloudflare-tunnel.ps1`](../../scripts/tunnel/setup-cloudflare-tunnel.ps1) - Setup persistente
+- [`scripts/tunnel/start-cloudflare-tunnel.ps1`](../../scripts/tunnel/start-cloudflare-tunnel.ps1) - Iniciar persistente
+- [`scripts/tunnel/stop-cloudflare-tunnel.ps1`](../../scripts/tunnel/stop-cloudflare-tunnel.ps1) - Detener
 
 ### Documentación del Proyecto
 
