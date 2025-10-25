@@ -20,7 +20,7 @@ ENV VERSION=${VERSION:-LATEST} \
     VIEW_DISTANCE=${VIEW_DISTANCE:-10} \
     SIMULATION_DISTANCE=${SIMULATION_DISTANCE:-10} \
     LEVEL_NAME=${LEVEL_NAME:-world} \
-    MOTD=${MOTD:-A Minecraft Server} \
+    MOTD="${MOTD:-A Minecraft Server}" \
     SPAWN_PROTECTION=${SPAWN_PROTECTION:-16}
 
 # Auto-pause configuration for resource optimization
