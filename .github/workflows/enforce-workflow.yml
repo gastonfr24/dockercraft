@@ -55,6 +55,19 @@ jobs:
               warnings.push(`   Ejemplo: \`feat(api): add user authentication\``);
             }
             
+            // REGLA 5: Recordatorio de aprobación
+            let approvalNote = `\n---\n\n`;
+            approvalNote += `### 👤 Aprobación Requerida\n\n`;
+            approvalNote += `Este PR a \`main\` **REQUIERE APROBACIÓN MANUAL** del owner (@gastonfr24).\n\n`;
+            approvalNote += `**NO se puede hacer auto-merge.**\n\n`;
+            approvalNote += `El owner debe:\n`;
+            approvalNote += `1. Revisar todos los cambios\n`;
+            approvalNote += `2. Verificar CI/CD passing\n`;
+            approvalNote += `3. Aprobar manualmente\n`;
+            approvalNote += `4. Mergear cuando esté listo\n`;
+            
+            comment += approvalNote;
+            
             // Crear comentario con resultados
             let comment = `## 🔍 Validación de Workflow\n\n`;
             
@@ -117,6 +130,7 @@ jobs:
             
             if (!hasClosingKeyword && !headBranch.startsWith('sprint/')) {
               warnings.push(`⚠️ **RECOMENDADO:** El PR debería tener \`Closes #X\` vinculando a un Issue`);
+              warnings.push(`   Esto vinculará el Issue en la sección "Development" del PR`);
             }
             
             // Crear comentario
@@ -135,7 +149,9 @@ jobs:
             }
             
             if (errors.length === 0 && warnings.length === 0) {
-              comment += `### ✅ Todas las Validaciones Pasaron\n`;
+              comment += `### ✅ Todas las Validaciones Pasaron\n\n`;
+              comment += `Este PR puede ser auto-mergeado por cualquier desarrollador.\n`;
+              comment += `**No requiere aprobación manual.**\n`;
             }
             
             await github.rest.issues.createComment({

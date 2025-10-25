@@ -96,7 +96,7 @@ foreach ($branch in $branches) {
         continue
     }
     
-    # Crear PR body
+    # Crear PR body - IMPORTANTE: "Closes #X" debe estar al inicio
     $prBody = @"
 Closes #$issueNumber
 
@@ -113,17 +113,18 @@ Ver commits individuales para detalles completos de implementación.
 - [x] Código implementado
 - [x] Commits con mensajes descriptivos
 - [x] Documentación actualizada
-- [x] Vinculado a Issue #$issueNumber
+- [x] Issue #$issueNumber vinculado en Development section
 
-## 🔗 Issue Relacionado
+## 📊 Sprint Info
 
-Closes #$issueNumber
+- **Sprint:** Sprint 3
+- **User Story:** $($branch.issue)
+- **Story Points:** Ver issue
+- **Tipo:** Feature
 
 ---
 
-**Sprint:** Sprint 3
-**User Story:** $($branch.issue)
-**Tipo:** Feature
+**Note:** Este PR cerrará automáticamente el Issue #$issueNumber al ser mergeado.
 "@
     
     # Crear PR

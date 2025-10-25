@@ -167,14 +167,14 @@ git checkout -b release/vX.Y.0
 
 #### 4.2 Pull Request Dev → Main
 
-**ESTE ES EL PASO MÁS CRÍTICO**
+**⚠️ ESTE ES EL PASO MÁS CRÍTICO - REQUIERE APROBACIÓN DEL OWNER**
 
 ```bash
 gh pr create \
   --base main \
   --head dev \
   --title "Release vX.Y.0 - Sprint X" \
-  --body "Closes #[sprint-issue]
+  --body "Closes #[sprint-tracking-issue]
 
 ## Sprint X Summary
 
