@@ -1,0 +1,69 @@
+# Docker Compose con Cloudflare Quick Tunnel (sin cuenta)
+# DockerCraft - Quick Public Deployment
+version: '3.8'
+
+services:
+  # Servidor de Minecraft
+  minecraft:
+    image: itzg/minecraft-server:latest
+    container_name: mc-server
+    restart: unless-stopped
+    ports:
+      - "25565:25565"  # Solo para acceso local/tunnel
+      - "25575:25575"  # RCON (solo localhost)
+    environment:
+      EULA: ${EULA:-TRUE}
+      VERSION: ${VERSION:-1.21.1}
+      TYPE: ${TYPE:-PAPER}
+      MEMORY: ${MEMORY:-4G}
+      MAX_PLAYERS: ${MAX_PLAYERS:-20}
+      DIFFICULTY: ${DIFFICULTY:-normal}
+      GAMEMODE: ${GAMEMODE:-survival}
+      PVP: ${PVP:-true}
+      VIEW_DISTANCE: ${VIEW_DISTANCE:-10}
+      SIMULATION_DISTANCE: ${SIMULATION_DISTANCE:-10}
+      LEVEL_NAME: ${LEVEL_NAME:-world}
+      MOTD: "${MOTD:-A Minecraft Server via Quick Tunnel}"
+      SPAWN_PROTECTION: ${SPAWN_PROTECTION:-16}
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: ${RCON_PASSWORD:-minecraft}
+      RCON_PORT: 25575
+      # Performance flags
+      USE_AIKAR_FLAGS: "true"
+      # Auto-pause cuando no hay jugadores
+      ENABLE_AUTOPAUSE: ${ENABLE_AUTOPAUSE:-TRUE}
+      AUTOPAUSE_TIMEOUT_EST: ${AUTOPAUSE_TIMEOUT_EST:-300}
+      AUTOPAUSE_TIMEOUT_INIT: ${AUTOPAUSE_TIMEOUT_INIT:-60}
+    volumes:
+      - mc-data:/data
+    healthcheck:
+      test: ["CMD", "mc-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    networks:
+      - minecraft-net
+
+  # Cloudflare Quick Tunnel (dominio temporal)
+  cloudflared-quick:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-quick
+    restart: unless-stopped
+    command: tunnel --url tcp://minecraft:25565
+    depends_on:
+      minecraft:
+        condition: service_healthy
+    networks:
+      - minecraft-net
+    # Los logs mostrarán el dominio temporal asignado
+
+volumes:
+  mc-data:
+    name: dockercraft-data
+
+networks:
+  minecraft-net:
+    name: dockercraft-network
+    driver: bridge
+
