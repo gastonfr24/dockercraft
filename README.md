@@ -78,7 +78,7 @@ git clone https://github.com/gastonfr24/dockercraft.git
 cd dockercraft
 
 # 2. Setup automatizado (recomendado)
-./scripts/setup.sh
+./scripts/deployment/setup.sh
 
 # 3. Levantar servidor
 docker compose up -d
@@ -100,10 +100,10 @@ docker compose ps
 docker exec minecraft-server rcon-cli list
 
 # Monitorear recursos
-./scripts/monitor.sh
+./scripts/monitoring/monitor.sh
 
 # Ver ayuda
-./scripts/setup.sh --help
+./scripts/deployment/setup.sh --help
 ```
 
 ---
@@ -112,18 +112,40 @@ docker exec minecraft-server rcon-cli list
 
 ```
 dockercraft/
-├── docs/                  # Documentación completa
-│   └── ai/                # Docs específicas para contexto de IA
-├── Dockerfile             # Imagen Docker optimizada
-├── docker-compose.yml     # Ejemplo standalone
-├── docker-compose.multi.yml  # Ejemplo multi-servidor
-├── .env.example           # Variables de entorno documentadas
-├── server.properties      # Configuración base
-├── config/                # Configuraciones adicionales
-├── plugins/               # Plugins pre-instalados (opcional)
-├── scripts/               # Scripts de utilidad
-└── README.md              # Este archivo
+├── docs/                      # 📚 Documentación completa
+│   ├── setup/                 # Guías de instalación
+│   ├── deployment/            # Guías de deployment público
+│   ├── security/              # Guías de seguridad
+│   ├── monitoring/            # Guías de monitoreo
+│   ├── troubleshooting/       # Resolución de problemas
+│   ├── development/           # Guías para desarrolladores
+│   ├── sprints/               # Planificación de sprints
+│   ├── ai/                    # Docs para IA (contexto, memoria, roadmap)
+│   ├── templates/             # Templates de configuración
+│   ├── INDEX.md               # Índice completo de docs
+│   └── VERSIONS.md            # Versiones soportadas
+├── scripts/                   # 🛠️ Scripts de automatización
+│   ├── deployment/            # Deployment y setup
+│   ├── security/              # Seguridad y firewall
+│   ├── monitoring/            # Monitoreo y alertas
+│   ├── backup/                # Backup y restore
+│   ├── whitelist/             # Gestión de whitelist
+│   ├── tunnel/                # Cloudflare Tunnel
+│   ├── utils/                 # Utilidades generales
+│   └── README.md              # Documentación de scripts
+├── Dockerfile                 # 🐳 Imagen Docker optimizada
+├── docker-compose.yml         # Ejemplo standalone
+├── docker-compose.prod.yml    # Configuración producción
+├── docker-compose.dev.yml     # Configuración desarrollo
+├── docker-compose.multi.yml   # Ejemplo multi-servidor
+├── .env.example               # Variables de entorno documentadas
+├── server.properties          # Configuración base
+├── config/                    # Configuraciones adicionales
+├── plugins/                   # Plugins pre-instalados (opcional)
+└── README.md                  # Este archivo
 ```
+
+Ver [docs/INDEX.md](docs/INDEX.md) para navegación completa de la documentación.
 
 ---
 
@@ -253,28 +275,46 @@ Ver `docs/ai/07_WORKFLOWS.md` para ejemplos completos.
 
 ## 📚 Documentación
 
-### Para Usuarios
+> **📖 Índice Completo**: Ver [`docs/INDEX.md`](docs/INDEX.md)
 
-- 📖 **Quick Start**: Ver sección anterior
-- 🔧 **Configuración**: Ver `.env.example`
-- 🐛 **Troubleshooting**: Ver `docs/ai/07_WORKFLOWS.md`
-- 📝 **Variables de Entorno**: Ver `docs/ai/08_QUICK_START.md`
+### Documentación por Categoría
 
-### Para Desarrolladores/IA
+#### 🚀 Setup e Instalación
+- [Quick Start](docs/ai/08_QUICK_START.md) - Inicio rápido
+- [Advanced Config](docs/setup/ADVANCED_CONFIG.md) - Configuración avanzada
+- [Examples](docs/setup/EXAMPLES.md) - Ejemplos de configuraciones
+- [Modpacks](docs/setup/MODPACKS.md) - Instalación de modpacks
 
-Documentación completa en `docs/ai/`:
+#### 🌐 Deployment Público
+- [Cloudflare Tunnel](docs/deployment/CLOUDFLARE_TUNNEL.md) - Exposición pública (recomendado)
+- [Public Deployment Guide](docs/deployment/PUBLIC_DEPLOYMENT_GUIDE.md) - Guía completa
+- [Networking](docs/deployment/NETWORKING.md) - Configuración de red
 
-1. **`01_CONTEXT.md`** - Contexto del proyecto
-2. **`02_ARCHITECTURE.md`** - Arquitectura técnica
-3. **`03_DECISIONS.md`** - Decisiones técnicas (ADRs)
-4. **`04_MEMORY.md`** - Memoria del proyecto
-5. **`05_ROADMAP.md`** - Plan de implementación
-6. **`07_WORKFLOWS.md`** - Procedimientos y workflows
-7. **`08_QUICK_START.md`** - Guía rápida detallada
-8. **`09_CHANGELOG.md`** - Historial de cambios
-9. **`10_GLOSSARY.md`** - Glosario de términos
+#### 🔒 Seguridad
+- [Security Guide](docs/security/SECURITY.md) - Guía completa de seguridad
+- [Approval Rules](docs/security/APPROVAL_RULES.md) - Reglas de aprobación de PRs
 
-**Inicio recomendado para IA:** Leer `docs/ai/00_README_AI.md`
+#### 📊 Monitoring
+- [Performance](docs/monitoring/PERFORMANCE.md) - Optimización de performance
+- [Alerts](docs/monitoring/ALERTS.md) - Sistema de alertas
+- [Metrics API](docs/monitoring/METRICS_API.md) - API de métricas
+
+#### 🐛 Troubleshooting
+- [Troubleshooting](docs/troubleshooting/TROUBLESHOOTING.md) - Resolución de problemas
+- [FAQ](docs/troubleshooting/FAQ.md) - Preguntas frecuentes
+- [Public Troubleshooting](docs/troubleshooting/PUBLIC_TROUBLESHOOTING.md) - Problemas de conectividad
+
+#### 💻 Desarrollo
+- [Contributing](docs/development/CONTRIBUTING.md) - Guía de contribución
+- [Development](docs/development/DEVELOPMENT.md) - Entorno de desarrollo
+- [Sprint Workflow](docs/development/SPRINT_WORKFLOW.md) - Workflow de sprints
+
+#### 🤖 Para IA
+Documentación completa en [`docs/ai/`](docs/ai/):
+- [00_README_AI.md](docs/ai/00_README_AI.md) - Guía para IA
+- [01_CONTEXT.md](docs/ai/01_CONTEXT.md) - Contexto del proyecto
+- [02_ARCHITECTURE.md](docs/ai/02_ARCHITECTURE.md) - Arquitectura técnica
+- [04_MEMORY.md](docs/ai/04_MEMORY.md) - Estado actual del proyecto
 
 ---
 

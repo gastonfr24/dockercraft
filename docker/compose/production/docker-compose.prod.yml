@@ -1,0 +1,139 @@
+# DockerCraft - Production Configuration
+# 
+# Uso: docker compose --env-file .env.production -f docker-compose.prod.yml up -d
+#
+# IMPORTANTE: Configurar .env.production antes de usar este compose
+
+services:
+  minecraft:
+    build: .
+    container_name: mc-server-prod
+    hostname: mc-server-prod
+    
+    # Puertos
+    ports:
+      # Minecraft server - EXPUESTO públicamente
+      - "25565:25565"
+      
+      # RCON - SOLO localhost (seguridad)
+      - "127.0.0.1:25575:25575"
+    
+    # Variables de entorno
+    environment:
+      # Core
+      EULA: "${EULA:-TRUE}"
+      VERSION: "${VERSION:-1.21.1}"
+      TYPE: "${TYPE:-PAPER}"
+      
+      # Memory
+      MEMORY: "${MEMORY:-8G}"
+      INIT_MEMORY: "${INIT_MEMORY:-2G}"
+      USE_AIKAR_FLAGS: "${USE_AIKAR_FLAGS:-true}"
+      
+      # Players
+      MAX_PLAYERS: "${MAX_PLAYERS:-20}"
+      
+      # World
+      LEVEL_NAME: "${LEVEL_NAME:-world}"
+      DIFFICULTY: "${DIFFICULTY:-normal}"
+      GAMEMODE: "${GAMEMODE:-survival}"
+      PVP: "${PVP:-true}"
+      VIEW_DISTANCE: "${VIEW_DISTANCE:-10}"
+      SIMULATION_DISTANCE: "${SIMULATION_DISTANCE:-10}"
+      SPAWN_PROTECTION: "${SPAWN_PROTECTION:-16}"
+      
+      # Security
+      ONLINE_MODE: "${ONLINE_MODE:-true}"
+      ENABLE_WHITELIST: "${ENABLE_WHITELIST:-true}"
+      ENABLE_COMMAND_BLOCK: "${ENABLE_COMMAND_BLOCK:-false}"
+      ALLOW_FLIGHT: "${ALLOW_FLIGHT:-false}"
+      
+      # RCON
+      ENABLE_RCON: "${ENABLE_RCON:-true}"
+      RCON_PORT: "${RCON_PORT:-25575}"
+      RCON_PASSWORD: "${RCON_PASSWORD:-minecraft}"
+      
+      # Auto-pause
+      ENABLE_AUTOPAUSE: "${ENABLE_AUTOPAUSE:-TRUE}"
+      AUTOPAUSE_TIMEOUT_EST: "${AUTOPAUSE_TIMEOUT_EST:-300}"
+      AUTOPAUSE_TIMEOUT_KN: "${AUTOPAUSE_TIMEOUT_KN:-120}"
+      
+      # Server identity
+      MOTD: "${MOTD:-Servidor de Minecraft}"
+      
+      # Performance
+      MAX_TICK_TIME: "${MAX_TICK_TIME:--1}"
+      NETWORK_COMPRESSION_THRESHOLD: "${NETWORK_COMPRESSION_THRESHOLD:-256}"
+      RATE_LIMIT: "${RATE_LIMIT:-true}"
+      
+      # Logging
+      LOG_TIMESTAMP: "${LOG_TIMESTAMP:-true}"
+      GUI: "${GUI:-FALSE}"
+      TZ: "${TZ:-America/New_York}"
+    
+    # Cargar .env.production
+    env_file:
+      - .env.production
+    
+    # Volumes
+    volumes:
+      # Datos del servidor (persistente)
+      - mc-data-prod:/data
+      
+      # Backups (accesible desde host)
+      - ./backups:/backups
+      
+      # Whitelist (read-only para seguridad)
+      - ./whitelist.json:/data/whitelist.json:ro
+    
+    # Networking
+    networks:
+      - minecraft-prod
+    
+    # Restart policy - siempre reiniciar excepto si se detuvo manualmente
+    restart: unless-stopped
+    
+    # Limites de recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 10G
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+    
+    # Stdin/tty para consola
+    stdin_open: true
+    tty: true
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "mc-health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+    
+    # Logging optimizado para producción
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+        compress: "true"
+
+# Volumes nombrados
+volumes:
+  mc-data-prod:
+    name: mc-data-prod
+    driver: local
+    # Para datos críticos, considerar backup driver o volumen externo
+
+# Networks
+networks:
+  minecraft-prod:
+    name: minecraft-prod-network
+    driver: bridge
+
+
