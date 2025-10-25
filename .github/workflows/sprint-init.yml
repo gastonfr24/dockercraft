@@ -1,0 +1,107 @@
+name: Sprint Initialization
+
+# Trigger manual para iniciar un nuevo sprint
+on:
+  workflow_dispatch:
+    inputs:
+      sprint_number:
+        description: 'Sprint number (e.g., 4)'
+        required: true
+        type: string
+      user_stories:
+        description: 'User Stories JSON (format: [{"id":"US-19","tasks":["dockerfile","docs","tests"]}])'
+        required: true
+        type: string
+
+jobs:
+  initialize-sprint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      
+      - name: Create Sprint Branch
+        id: sprint-branch
+        run: |
+          SPRINT_NUM="${{ github.event.inputs.sprint_number }}"
+          BRANCH_NAME="sprint/${SPRINT_NUM}"
+          
+          echo "Creating sprint branch: $BRANCH_NAME"
+          git checkout -b "$BRANCH_NAME"
+          git push origin "$BRANCH_NAME"
+          
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          echo "sprint_num=$SPRINT_NUM" >> $GITHUB_OUTPUT
+      
+      - name: Parse User Stories and Create Task Branches
+        id: create-branches
+        uses: actions/github-script@v7
+        env:
+          USER_STORIES: ${{ github.event.inputs.user_stories }}
+          SPRINT_NUM: ${{ steps.sprint-branch.outputs.sprint_num }}
+        with:
+          script: |
+            const userStories = JSON.parse(process.env.USER_STORIES);
+            const sprintNum = process.env.SPRINT_NUM;
+            const branches = [];
+            
+            for (const us of userStories) {
+              const usId = us.id.toLowerCase(); // us-19
+              const tasks = us.tasks || [];
+              
+              for (const task of tasks) {
+                const branchName = `task/${usId}-${task}`;
+                branches.push({
+                  name: branchName,
+                  us: us.id,
+                  task: task
+                });
+                
+                // Create branch from sprint branch
+                await exec.exec('git', ['checkout', `sprint/${sprintNum}`]);
+                await exec.exec('git', ['checkout', '-b', branchName]);
+                await exec.exec('git', ['push', 'origin', branchName]);
+                
+                console.log(`✅ Created branch: ${branchName}`);
+              }
+            }
+            
+            core.setOutput('branches', JSON.stringify(branches));
+            return branches;
+      
+      - name: Summary
+        uses: actions/github-script@v7
+        env:
+          BRANCHES: ${{ steps.create-branches.outputs.branches }}
+          SPRINT_NUM: ${{ steps.sprint-branch.outputs.sprint_num }}
+        with:
+          script: |
+            const branches = JSON.parse(process.env.BRANCHES);
+            const sprintNum = process.env.SPRINT_NUM;
+            
+            let summary = `## 🚀 Sprint ${sprintNum} Initialized\n\n`;
+            summary += `### ✅ Created Branches\n\n`;
+            
+            for (const branch of branches) {
+              summary += `- \`${branch.name}\` (${branch.us})\n`;
+            }
+            
+            summary += `\n### 📋 Next Steps\n\n`;
+            summary += `1. Issues will be auto-created for each task branch\n`;
+            summary += `2. Work on each task branch individually\n`;
+            summary += `3. Create PRs with "Closes #X"\n`;
+            summary += `4. Merge to sprint/${sprintNum}\n`;
+            summary += `5. When sprint complete, create PR from sprint/${sprintNum} to dev\n`;
+            
+            await core.summary.write(summary);
+            console.log(summary);
+
